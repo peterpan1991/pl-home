@@ -28,7 +28,7 @@ test("server-renders the portfolio homepage", async () => {
   assert.match(response.headers.get("content-type") ?? "", /^text\/html\b/i);
 
   const html = await response.text();
-  assert.match(html, /<title>奇想书桌｜作品、漫画、工具与教程<\/title>/i);
+  assert.match(html, /<title>PL-HOME｜作品、漫画、工具与教程<\/title>/i);
   assert.match(html, /PL-HOME/);
   assert.doesNotMatch(html, /Your site is taking shape|Building your site/i);
 });
