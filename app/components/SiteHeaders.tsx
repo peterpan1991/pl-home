@@ -1,6 +1,7 @@
 "use client";
 
 import type { ReactNode } from "react";
+import { sitePath } from "../lib/sitePath";
 
 type HeaderTheme = "day" | "night";
 
@@ -16,7 +17,7 @@ const mainNavItems = [
 function HeaderBrand({ subtitle, onActivate }: { subtitle: string; onActivate?: () => void }) {
   const content = (
     <>
-      <span className="shared-header-logo" aria-hidden="true"><img src="/brand/logo.png" alt="" /></span>
+      <span className="shared-header-logo" aria-hidden="true"><img src={sitePath("/brand/logo.png")} alt="" /></span>
       <span className="shared-header-brand-copy"><strong>PL-HOME</strong><small>{subtitle}</small></span>
     </>
   );
@@ -24,7 +25,7 @@ function HeaderBrand({ subtitle, onActivate }: { subtitle: string; onActivate?: 
   return onActivate ? (
     <button className="shared-header-brand" type="button" onClick={onActivate} aria-label="返回首页场景">{content}</button>
   ) : (
-    <a className="shared-header-brand" href="/" aria-label="返回奇想书桌首页">{content}</a>
+    <a className="shared-header-brand" href={sitePath("/")} aria-label="返回奇想书桌首页">{content}</a>
   );
 }
 
@@ -32,7 +33,7 @@ function MainNavigation({ activeHref }: { activeHref: string }) {
   return (
     <nav className="shared-main-nav" aria-label="网站主菜单">
       {mainNavItems.map((item) => (
-        <a key={item.label} href={item.href} className={item.href === activeHref ? "is-active" : ""} aria-current={item.href === activeHref ? "page" : undefined}>
+        <a key={item.label} href={sitePath(item.href)} className={item.href === activeHref ? "is-active" : ""} aria-current={item.href === activeHref ? "page" : undefined}>
           <span>{item.index}</span>{item.label}
         </a>
       ))}

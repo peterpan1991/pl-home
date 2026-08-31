@@ -4,9 +4,12 @@ import { Canvas } from "@react-three/fiber";
 import { ContactShadows, OrbitControls, useGLTF } from "@react-three/drei";
 import { Suspense, useEffect } from "react";
 import type { Mesh } from "three";
+import { sitePath } from "../lib/sitePath";
+
+const MODEL_PATH = sitePath("/models/aju-explorer-cat-v2.glb");
 
 function AjuModel() {
-  const { scene } = useGLTF("/models/aju-explorer-cat-v2.glb");
+  const { scene } = useGLTF(MODEL_PATH);
 
   useEffect(() => {
     scene.traverse((object) => {
@@ -20,18 +23,18 @@ function AjuModel() {
   return <primitive object={scene} position={[0, -2.38, 0]} rotation={[0, -0.08, 0]} />;
 }
 
-useGLTF.preload("/models/aju-explorer-cat-v2.glb");
+useGLTF.preload(MODEL_PATH);
 
 export default function ModelPreview() {
   return (
     <main className="model-preview-page">
       <header className="model-preview-header">
-        <a href="/" className="model-back-link">← 返回首页</a>
+        <a href={sitePath("/")} className="model-back-link">← 返回首页</a>
         <div>
           <span>CHARACTER MODEL · V2</span>
           <h1>阿橘 · 探险猫</h1>
         </div>
-        <a className="model-file-link" href="/models/aju-explorer-cat-v2.glb" download>
+        <a className="model-file-link" href={MODEL_PATH} download>
           下载 GLB
         </a>
       </header>

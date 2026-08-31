@@ -20,6 +20,14 @@ npm run build
 npm test
 ```
 
+## GitHub Pages
+
+```bash
+npm run build:pages
+```
+
+静态文件会生成到 `out/`。仓库中的 GitHub Actions 工作流会在每次推送 `main` 后自动构建并发布到 GitHub Pages。
+
 ## 目录
 
 - `app/`：页面、组件和全局样式

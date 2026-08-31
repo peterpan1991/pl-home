@@ -16,6 +16,7 @@ import {
 } from "three";
 import { Suspense, useCallback, useEffect, useRef, useState, type ComponentRef } from "react";
 import { SceneHeader } from "../components/SiteHeaders";
+import { sitePath } from "../lib/sitePath";
 
 type AboutSectionId = "overview" | "interests" | "skills" | "projects";
 type ThemeMode = "day" | "night";
@@ -45,7 +46,7 @@ type AboutSection = {
   focus: string;
 };
 
-const MODEL_PATH = "/models/about-cat.glb";
+const MODEL_PATH = sitePath("/models/about-cat.glb");
 
 const aboutSections: AboutSection[] = [
   {
@@ -130,7 +131,7 @@ function AboutCatModel({
   onTransformChange: (values: CatDebugValues) => void;
 }) {
   const { scene } = useGLTF(MODEL_PATH, false, true);
-  const model = useRef<Group>(null);
+  const model = useRef<Group>(null!);
 
   useEffect(() => {
     scene.traverse((object) => {

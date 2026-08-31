@@ -7,6 +7,7 @@ import { ContactShadows, OrbitControls, TransformControls } from "@react-three/d
 import type { Group } from "three";
 import type { ComponentRef } from "react";
 import { SceneHeader } from "./components/SiteHeaders";
+import { sitePath } from "./lib/sitePath";
 
 type SectionId = "home" | "about" | "comics" | "works" | "tools" | "tutorials";
 type ThemeMode = "day" | "night";
@@ -107,12 +108,12 @@ const sections: Section[] = [
 ];
 
 const sectionRoutes: Record<SectionId, string> = {
-  home: "/",
-  comics: "/comics",
-  tutorials: "/notes",
-  tools: "/tools/manga-translator",
-  works: "/works",
-  about: "/about",
+  home: sitePath("/"),
+  comics: sitePath("/comics"),
+  tutorials: sitePath("/notes"),
+  tools: sitePath("/tools/manga-translator"),
+  works: sitePath("/works"),
+  about: sitePath("/about"),
 };
 
 const cameraPresets: Record<SectionId, { position: [number, number, number]; target: [number, number, number]; zoom: number }> = {
@@ -422,7 +423,7 @@ function ComicRow({ active, onSelect }: { active: boolean; onSelect: () => void 
 }
 
 function WorkFrame({ active, onSelect }: { active: boolean; onSelect: () => void }) {
-  const frameRef = useRef<Group>(null);
+  const frameRef = useRef<Group>(null!);
   const DEBUG = false;
 
   const printTransform = () => {

@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo, useState, type CSSProperties } from "react";
 import { ContentHeader } from "../components/SiteHeaders";
+import { sitePath } from "../lib/sitePath";
 
 type ThemeMode = "day" | "night";
 type ShelfId = "theater" | "collection";
@@ -128,7 +129,7 @@ export default function ComicsPage() {
               <div className="comic-reading-progress">
                 <div><span>阅读进度</span><b>{selectedBook.progress}%</b></div>
                 <i><span style={{ width: `${selectedBook.progress}%` }} /></i>
-                <a href={`/comics/reader?book=${selectedBook.id}`}>{selectedBook.progress > 0 ? "继续阅读" : "开始阅读"}<span>→</span></a>
+                <a href={sitePath(`/comics/reader?book=${selectedBook.id}`)}>{selectedBook.progress > 0 ? "继续阅读" : "开始阅读"}<span>→</span></a>
               </div>
             ) : (
               <div className="comic-collection-note"><span>COLLECTION NOTE</span><p>点击后可继续补充版本信息、收藏原因和个人阅读笔记。</p></div>

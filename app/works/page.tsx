@@ -2,6 +2,7 @@
 
 import { useEffect, useState, type CSSProperties } from "react";
 import { ContentHeader } from "../components/SiteHeaders";
+import { sitePath } from "../lib/sitePath";
 
 type ThemeMode = "day" | "night";
 type WorkCategory = "wallpapers" | "illustrations" | "cards";
@@ -68,8 +69,8 @@ const collections: Record<WorkCategory, WorkItem[]> = {
     { id: "i-06", title: "夏日收集册", note: "主题插画", year: "2024", palette: ["#4e8790", "#f1b966", "#db7256"], variant: 6 },
   ],
   cards: [
-    { id: "c-01", title: "小木灵", note: "动态卡牌 · 01", year: "2026", palette: ["#71883f", "#b8cf58", "#263f42"], variant: 1, image: "/pokemonCard/image/1.jpg", video: "/pokemonCard/video/1.mp4" },
-    { id: "c-02", title: "摔角鹰人", note: "动态卡牌 · 02", year: "2026", palette: ["#e19a24", "#f2c448", "#ad382e"], variant: 2, image: "/pokemonCard/image/2.jpg", video: "/pokemonCard/video/2.mp4" },
+    { id: "c-01", title: "小木灵", note: "动态卡牌 · 01", year: "2026", palette: ["#71883f", "#b8cf58", "#263f42"], variant: 1, image: sitePath("/pokemonCard/image/1.jpg"), video: sitePath("/pokemonCard/video/1.mp4") },
+    { id: "c-02", title: "摔角鹰人", note: "动态卡牌 · 02", year: "2026", palette: ["#e19a24", "#f2c448", "#ad382e"], variant: 2, image: sitePath("/pokemonCard/image/2.jpg"), video: sitePath("/pokemonCard/video/2.mp4") },
   ],
 };
 
@@ -214,7 +215,7 @@ export default function WorksPage() {
 
       <footer className="works-footer">
         <span>© 2026 奇想书桌</span>
-        <a href="/">← 回到书桌</a>
+        <a href={sitePath("/")}>← 回到书桌</a>
       </footer>
 
       {activeCard && activeCardIndex !== null ? (

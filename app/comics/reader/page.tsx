@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useMemo, useState, type CSSProperties } from "react";
+import { sitePath } from "../../lib/sitePath";
 
 type ThemeMode = "day" | "night";
 type ReaderWidth = "compact" | "standard" | "wide";
@@ -226,7 +227,7 @@ export default function ComicReaderPage() {
       <div className="reader-progress-line" aria-hidden="true"><span style={{ width: `${progress}%` }} /></div>
 
       <header className="reader-header">
-        <a className="reader-back" href="/comics" aria-label="返回漫画书架"><span>←</span><b>返回书架</b></a>
+        <a className="reader-back" href={sitePath("/comics")} aria-label="返回漫画书架"><span>←</span><b>返回书架</b></a>
         <button className="reader-chapter-toggle" type="button" onClick={() => setChapterPanelOpen((open) => !open)} aria-expanded={chapterPanelOpen}>
           <span>{String(safeChapterIndex + 1).padStart(2, "0")}</span>
           <strong>{book.title}<small>第 {safeChapterIndex + 1} 话 · {chapterTitle}</small></strong>
