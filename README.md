@@ -28,6 +28,8 @@ npm run build:pages
 
 静态文件会生成到 `out/`，用于发布到独立的公开仓库 `peterpan1991.github.io`；本仓库继续保持私有。
 
+正式发布时需要同时更新私有源码仓库、OpenAI Sites 和公开 GitHub Pages。完整流程见 `AGENTS.md`。
+
 ## 目录
 
 - `app/`：页面、组件和全局样式
