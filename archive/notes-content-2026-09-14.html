@@ -1,0 +1,486 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>PL-HOME 笔记内容存档 · 2026-09-14</title>
+  <style>
+    :root{color-scheme:light dark;--bg:#f5e4d2;--card:#fffaf2;--ink:#312823;--soft:#78665c;--accent:#df7449;--line:rgba(76,52,41,.14)}
+    *{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.75 -apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif}
+    main{width:min(1000px,calc(100% - 32px));margin:auto;padding:64px 0 96px}header{margin-bottom:36px}h1{margin:.2em 0;font-size:clamp(32px,6vw,60px)}header p{max-width:720px;color:var(--soft)}.meta{font-size:13px;font-weight:800;letter-spacing:.12em;color:var(--accent)}
+    nav,details{margin:16px 0;padding:22px;border:1px solid var(--line);border-radius:18px;background:var(--card);box-shadow:0 15px 36px rgba(78,47,34,.07)}
+    nav ol{margin:12px 0 0;padding-left:24px}summary{cursor:pointer;font-weight:900}pre{margin:20px 0 0;padding:20px;max-height:70vh;overflow:auto;border-radius:12px;background:#18212d;color:#e9e2d8;font:12px/1.6 ui-monospace,SFMono-Regular,Menlo,monospace;white-space:pre-wrap;word-break:break-word}
+    footer{margin-top:40px;color:var(--soft);font-size:13px}@media(prefers-color-scheme:dark){:root{--bg:#172231;--card:#202d3c;--ink:#f3e9dc;--soft:#b8b2ab;--line:rgba(255,255,255,.12)}}
+  </style>
+</head>
+<body><main>
+  <header><span class="meta">HTML ARCHIVE · 2026-09-14</span><h1>PL-HOME 笔记内容存档</h1><p>这是从网站移除“笔记”栏目之前生成的独立存档。原始内容以可搜索、可复制的源码形式完整保存在本文件中，包含文章正文、结构与商品档案数据。</p></header>
+  <nav><strong>存档内容</strong><ol><li>万代宝可梦比例世界：全商品发售与再版时间线</li><li>日本代购平台对比：挖煤姬、乐淘一番、日淘市集</li><li>不同漫画入手最佳价格：简中、台版与原版</li><li>隐秘的角落</li></ol></nav>
+  <details><summary>笔记页面</summary><pre><code>"use client";
+
+import { useMemo, useState } from "react";
+import { ContentHeader } from "../components/SiteHeaders";
+import { useTheme } from "../lib/useTheme";
+import { PokemonScaleWorldContent } from "./PokemonScaleWorldContent";
+
+type ReaderSize = "small" | "medium" | "large";
+
+type NoteItem = {
+  id: string;
+  title: string;
+  summary: string;
+  date: string;
+  readTime: string;
+  tags: string[];
+  kind?: "wiki" | "comparison" | "guide" | "letter" | "pokemon-scale-world";
+  sections?: Array&lt;[string, string]&gt;;
+};
+
+const wikiCategory = { index: "01", label: "百科", english: "PERSONAL WIKI", mark: "知", description: "整理一些自己的知识" };
+
+const notes: NoteItem[] = [
+  { id: "wi-08", title: "万代宝可梦比例世界：全商品发售与再版时间线", summary: "收录 166 条 Pokémon Scale World 官方销售记录，整理图片、税前与含税价格、发行时间和再版批次。", date: "更新于 2026.09.04", readTime: "18 分钟", tags: ["宝可梦", "万代", "模玩", "比例世界", "发行档案"], kind: "pokemon-scale-world", sections: [["intro", "系列档案"], ["method", "整理口径"], ["catalog", "完整目录"], ["reissues", "再版脉络"], ["sources", "资料来源"]] },
+  { id: "wi-05", title: "日本代购平台对比：挖煤姬、乐淘一番、日淘市集", summary: "从手续费、清关速度、发货流程和到付规则，梳理三个常用日淘平台的实际差异。", date: "更新于 2026.09", readTime: "7 分钟", tags: ["模玩", "购物", "转运", "日本"], kind: "comparison", sections: [["intro", "写在前面"], ["wameiji", "挖煤姬"], ["letao", "乐淘一番"], ["ritaoshi", "日淘市集"], ["summary", "选购建议"]] },
+  { id: "wi-06", title: "不同漫画入手最佳价格：简中、台版与原版", summary: "按版本梳理漫画的入手时机、折扣底线与平台蹲价技巧，避免被背刺。", date: "更新于 2026.09", readTime: "6 分钟", tags: ["漫画", "购物", "省钱", "版本"], kind: "guide", sections: [["intro", "写在前面"], ["jianzhong", "简中漫画"], ["taiban", "台版漫画"], ["yuanban", "原版漫画"], ["summary", "一句话总结"]] },
+  { id: "wi-07", title: "隐秘的角落", summary: "有些角落需要一点缘分才能抵达。", date: "更新于 2026.09", readTime: "5 分钟", tags: ["随想", "数字生活", "暗号"], kind: "letter", sections: [["intro", "写在前面"], ["signals", "暗号说明"], ["treasures", "数字角落"], ["invitation", "成为朋友"], ["related", "相关词条"]] },
+];
+
+function WikiContent({ note }: { note: NoteItem }) {
+  return (
+    &lt;&gt;
+      &lt;section id="definition"&gt;&lt;p className="notes-wiki-label"&gt;DEFINITION · 定义&lt;/p&gt;&lt;h2&gt;{note.title}&lt;/h2&gt;&lt;p&gt;&lt;strong&gt;{note.title.split("：")[0]}&lt;/strong&gt; 是我在项目中反复遇到的一个概念。这个词条优先解释它解决什么问题、由哪些部分组成，以及什么时候不应该使用。&lt;/p&gt;&lt;div className="notes-wiki-summary"&gt;&lt;span&gt;一句话理解&lt;/span&gt;&lt;p&gt;{note.summary}&lt;/p&gt;&lt;/div&gt;&lt;/section&gt;
+      &lt;section id="components"&gt;&lt;p className="notes-wiki-label"&gt;COMPONENTS · 组成&lt;/p&gt;&lt;h2&gt;它通常包含哪些部分&lt;/h2&gt;&lt;div className="notes-definition-grid"&gt;&lt;article&gt;&lt;span&gt;01&lt;/span&gt;&lt;b&gt;输入&lt;/b&gt;&lt;p&gt;需要被处理的原始内容或状态。&lt;/p&gt;&lt;/article&gt;&lt;article&gt;&lt;span&gt;02&lt;/span&gt;&lt;b&gt;处理&lt;/b&gt;&lt;p&gt;算法、规则或人工判断发生的阶段。&lt;/p&gt;&lt;/article&gt;&lt;article&gt;&lt;span&gt;03&lt;/span&gt;&lt;b&gt;结果&lt;/b&gt;&lt;p&gt;可继续编辑、保存或展示的输出。&lt;/p&gt;&lt;/article&gt;&lt;/div&gt;&lt;/section&gt;
+      &lt;section id="usage"&gt;&lt;p className="notes-wiki-label"&gt;USAGE · 使用&lt;/p&gt;&lt;h2&gt;什么时候值得使用&lt;/h2&gt;&lt;table&gt;&lt;tbody&gt;&lt;tr&gt;&lt;th&gt;适合&lt;/th&gt;&lt;td&gt;重复出现、边界清楚、可以验证结果的问题。&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;th&gt;不适合&lt;/th&gt;&lt;td&gt;需求还没有被理解，只是为了使用某项新技术。&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;th&gt;检查&lt;/th&gt;&lt;td&gt;是否真的减少了时间、步骤或认知负担。&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;/section&gt;
+      &lt;section id="related"&gt;&lt;p className="notes-wiki-label"&gt;RELATED · 相关词条&lt;/p&gt;&lt;h2&gt;可以一起阅读&lt;/h2&gt;&lt;div className="notes-related-terms"&gt;&lt;span&gt;版面分析&lt;/span&gt;&lt;span&gt;本地优先&lt;/span&gt;&lt;span&gt;人工校对&lt;/span&gt;&lt;span&gt;可解释结果&lt;/span&gt;&lt;/div&gt;&lt;/section&gt;
+    &lt;/&gt;
+  );
+}
+
+function ComparisonContent() {
+  return (
+    &lt;&gt;
+      &lt;section id="intro"&gt;&lt;p className="notes-wiki-label"&gt;BACKGROUND · 背景&lt;/p&gt;&lt;h2&gt;为什么会写这篇对比&lt;/h2&gt;&lt;p&gt;买模玩和漫画时，日本代购平台几乎绕不开。平台之间差异看着小，真下过单就会发现手续费、清关速度、到付规则这些细节，直接决定一次购物是省心还是折腾。这里记录三个我实际用过的平台，只讲真实体验，不做绝对推荐。&lt;/p&gt;&lt;div className="notes-wiki-summary"&gt;&lt;span&gt;一句话理解&lt;/span&gt;&lt;p&gt;三个平台各有侧重，日淘市集综合体验最好，挖煤姬适合找货，乐淘一番适合愿意折腾省手续费的人。&lt;/p&gt;&lt;/div&gt;&lt;/section&gt;
+
+      &lt;section id="wameiji"&gt;&lt;p className="notes-wiki-label"&gt;PLATFORM · 平台一&lt;/p&gt;&lt;h2&gt;挖煤姬&lt;/h2&gt;&lt;p&gt;挖煤姬最大的优势是搜索方便，找绝版模玩和中古漫画时，检索覆盖比较全，比价也直观。&lt;/p&gt;&lt;div className="notes-platform-blocks"&gt;&lt;div className="notes-platform-block is-pros"&gt;&lt;h3&gt;优点&lt;/h3&gt;&lt;ul&gt;&lt;li&gt;商品搜索方便，覆盖较全&lt;/li&gt;&lt;li&gt;分类清晰&lt;/li&gt;&lt;li&gt;大额用券比较划算&lt;/li&gt;&lt;/ul&gt;&lt;/div&gt;&lt;div className="notes-platform-block is-cons"&gt;&lt;h3&gt;缺点&lt;/h3&gt;&lt;ul&gt;&lt;li&gt;手续费偏高&lt;/li&gt;&lt;li&gt;发货慢，需要预报备&lt;/li&gt;&lt;li&gt;清关审核通常要一周多&lt;/li&gt;&lt;li&gt;从申请到到手，整体大约需要三周&lt;/li&gt;&lt;/ul&gt;&lt;/div&gt;&lt;/div&gt;&lt;/section&gt;
+
+      &lt;section id="letao"&gt;&lt;p className="notes-wiki-label"&gt;PLATFORM · 平台二&lt;/p&gt;&lt;h2&gt;乐淘一番&lt;/h2&gt;&lt;p&gt;乐淘一番的卖点是无手续费，优惠券也多，理论上能省下一笔。但实际发货环节的繁琐程度，常常把这份优势抵消掉。&lt;/p&gt;&lt;div className="notes-platform-blocks"&gt;&lt;div className="notes-platform-block is-pros"&gt;&lt;h3&gt;优点&lt;/h3&gt;&lt;ul&gt;&lt;li&gt;无手续费&lt;/li&gt;&lt;li&gt;发券多，活动力度不错&lt;/li&gt;&lt;/ul&gt;&lt;/div&gt;&lt;div className="notes-platform-block is-cons"&gt;&lt;h3&gt;缺点&lt;/h3&gt;&lt;ul&gt;&lt;li&gt;不支持到付，不支持煤炉拍卖&lt;/li&gt;&lt;li&gt;整体使用体验非常糟糕，产品经理需要背锅&lt;/li&gt;&lt;li&gt;发货流程麻烦，需要填写规格并上传订单截图&lt;/li&gt;&lt;li&gt;税额计算会把岛内运费算进去，很容易超额&lt;/li&gt;&lt;/ul&gt;&lt;/div&gt;&lt;/div&gt;&lt;/section&gt;
+
+      &lt;section id="ritaoshi"&gt;&lt;p className="notes-wiki-label"&gt;PLATFORM · 平台三&lt;/p&gt;&lt;h2&gt;日淘市集&lt;/h2&gt;&lt;p&gt;三个平台里，日淘市集是我目前综合体验最好的一个。免手续费券多，清关速度快，多身份证清关也方便多件分开走。但是隐藏的坑也多。&lt;/p&gt;&lt;div className="notes-platform-blocks"&gt;&lt;div className="notes-platform-block is-pros"&gt;&lt;h3&gt;优点&lt;/h3&gt;&lt;ul&gt;&lt;li&gt;免手续费券多&lt;/li&gt;&lt;li&gt;清关速度快&lt;/li&gt;&lt;li&gt;综合体验最好&lt;/li&gt;&lt;li&gt;支持使用多个身份证清关&lt;/li&gt;&lt;/ul&gt;&lt;/div&gt;&lt;div className="notes-platform-block is-cons"&gt;&lt;h3&gt;缺点&lt;/h3&gt;&lt;ul&gt;&lt;li&gt;拍卖价格更新不及时&lt;/li&gt;&lt;li&gt;到付需要充值 4000 日元，不支持同捆，需先付 1000 日元运费，多退少补&lt;/li&gt;&lt;li&gt;税额计算会把手续费算进去&lt;/li&gt;&lt;li&gt;店铺卖家不支持同捆&lt;/li&gt;&lt;li&gt;非同捆订单税额会计算运费&lt;/li&gt;&lt;li&gt;汇率比其他平台高&lt;/li&gt;&lt;li&gt;运费使用固定费率0.047&lt;/li&gt;&lt;li&gt;到库存单时间较短，只有 45 天，其他平台通常是 90 天&lt;/li&gt;&lt;/ul&gt;&lt;/div&gt;&lt;/div&gt;&lt;/section&gt;
+
+      &lt;section id="summary"&gt;&lt;p className="notes-wiki-label"&gt;SUMMARY · 选购建议&lt;/p&gt;&lt;h2&gt;怎么选更省心&lt;/h2&gt;&lt;table&gt;&lt;tbody&gt;&lt;tr&gt;&lt;th&gt;小额多拍&lt;/th&gt;&lt;td&gt;选日淘市集，省手续费、清关快、操作顺，适合大多数模玩漫画购入场景。&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;th&gt;找货，日拍大额&lt;/th&gt;&lt;td&gt;选挖煤姬，搜索覆盖广，接受慢一点的发货节奏即可。经常有9.4折券，切大额可以省很多。&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;th&gt;愿意折腾省手续费&lt;/th&gt;&lt;td&gt;选乐淘一番，但要提前接受填规格、传截图的繁琐流程。&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;th&gt;重点关注&lt;/th&gt;&lt;td&gt;无论哪个平台，都看清到付规则、同捆限制、到库时间和税额计算方式，这四点最容易踩坑。&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;/section&gt;
+    &lt;/&gt;
+  );
+}
+
+function GuideContent() {
+  return (
+    &lt;&gt;
+      &lt;section id="intro"&gt;&lt;p className="notes-wiki-label"&gt;BACKGROUND · 背景&lt;/p&gt;&lt;h2&gt;为什么要按版本区分&lt;/h2&gt;&lt;p&gt;漫画版本不同，价格体系差得很远。简中靠大促和直播间蹲价，台版看折扣底线，原版则要算上海淘运费。把这三条线分开看，才不会拿错标尺判断是否是好价。&lt;/p&gt;&lt;div className="notes-wiki-summary"&gt;&lt;span&gt;一句话理解&lt;/span&gt;&lt;p&gt;简中蹲大促和直播间，台版 6 折就算好价，原版国内买不到时再海淘。&lt;/p&gt;&lt;/div&gt;&lt;/section&gt;
+
+      &lt;section id="jianzhong"&gt;&lt;p className="notes-wiki-label"&gt;VERSION · 版本一&lt;/p&gt;&lt;h2&gt;简中漫画&lt;/h2&gt;&lt;p&gt;入手时机主要集中在 423 读书节、618、双11、双12 这些大促节点。大促期间大部分漫画可以做到定价 5 折，再叠加满 300-150 的优惠券，折算下来大约 2.5 折。京东的力度通常更猛，能做到 300-170，也就是最低 2.2 折，这个折扣基本可以无脑入手。&lt;/p&gt;&lt;p&gt;非大促期间也不是完全没机会，可以蹲拼多多和抖音直播间。抖音的操作方式是把喜欢的书加入购物车，不停刷，等系统给你推卖书的直播间，比如博库、文轩等。刷到后点进去看，可能会掉 100-50 的券，一些新书本身就有折扣，再叠上这类券也能做到 3 折以下。拼多多则需要经常刷、经常看，系统也可能送大额券。&lt;/p&gt;&lt;div className="notes-wiki-summary"&gt;&lt;span&gt;关键底线&lt;/span&gt;&lt;p&gt;2.2 折是简中漫画的极限好价，2.5 折可以放心入，3 折以下属于蹲直播间能拿到的不错价格。&lt;/p&gt;&lt;/div&gt;&lt;/section&gt;
+
+      &lt;section id="taiban"&gt;&lt;p className="notes-wiki-label"&gt;VERSION · 版本二&lt;/p&gt;&lt;h2&gt;台版漫画&lt;/h2&gt;&lt;p&gt;台版漫画同样在大促时期入手最合适，但折扣一般只能做到 7 折，6折需要靠抢券，5 折以下比较少见。所以判断台版是否是好价的标准很简单，到定价的 6 折就可以下手，这个价位通常很难再被后续活动背刺。&lt;/p&gt;&lt;div className="notes-wiki-summary"&gt;&lt;span&gt;关键底线&lt;/span&gt;&lt;p&gt;台版 6 折是好价线，别抱着能蹲到 5 折的预期死等。&lt;/p&gt;&lt;/div&gt;&lt;/section&gt;
+
+      &lt;section id="yuanban"&gt;&lt;p className="notes-wiki-label"&gt;VERSION · 版本三&lt;/p&gt;&lt;h2&gt;原版漫画&lt;/h2&gt;&lt;p&gt;原版漫画需要使用海淘软件购入，算上运费之后仍然比国内便宜，尤其适合购买一些国内买不到的漫画。如果只是想买国内已有版本的书，原版在价格上未必占优，除非有绝版或特殊版本需求。&lt;/p&gt;&lt;div className="notes-wiki-summary"&gt;&lt;span&gt;关键底线&lt;/span&gt;&lt;p&gt;原版的价值在于「国内买不到」，不是单纯比低价。&lt;/p&gt;&lt;/div&gt;&lt;/section&gt;
+
+      &lt;section id="summary"&gt;&lt;p className="notes-wiki-label"&gt;SUMMARY · 一句话总结&lt;/p&gt;&lt;h2&gt;怎么判断该不该买&lt;/h2&gt;&lt;table&gt;&lt;tbody&gt;&lt;tr&gt;&lt;th&gt;简中&lt;/th&gt;&lt;td&gt;大促蹲 2.5 折以下，京东 2.2 折无脑入；非大促蹲抖音、拼多多直播间。&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;th&gt;台版&lt;/th&gt;&lt;td&gt;大促 6 折就是好价，5 折以下不用强求。&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;th&gt;原版&lt;/th&gt;&lt;td&gt;国内买不到时再海淘，运费加进去仍可能划算。&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;th&gt;重点关注&lt;/th&gt;&lt;td&gt;大促节点之外的价格别随便下手，尤其简中很容易被背刺。&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;/section&gt;
+    &lt;/&gt;
+  );
+}
+
+function LetterContent() {
+  return (
+    &lt;&gt;
+      &lt;section id="intro"&gt;&lt;p className="notes-wiki-label"&gt;LETTER · 信&lt;/p&gt;&lt;h2&gt;写在前面&lt;/h2&gt;&lt;p&gt;有些角落，因为众所周知的原因，不能在明面上敞开说。但沉默不代表不存在，只是需要换一种方式抵达。下面的每一个词都是暗号，看得懂的人自然懂，看不懂的人，就当是一首散文诗。&lt;/p&gt;&lt;div className="notes-wiki-summary"&gt;&lt;span&gt;一句话理解&lt;/span&gt;&lt;p&gt;这里没有地图，只有暗号；没有链接，只有方向。缘分到了，自然能找到。&lt;/p&gt;&lt;/div&gt;&lt;/section&gt;
+
+      &lt;section id="signals"&gt;&lt;p className="notes-wiki-label"&gt;SIGNAL · 暗号&lt;/p&gt;&lt;h2&gt;暗号说明&lt;/h2&gt;&lt;p&gt;下文会出现五个词，每个词都对应一个你想要很久的东西。它们不会以真名出现，但会以最贴切的隐喻现身。&lt;/p&gt;&lt;p&gt;如果你读到某个词时心里"咯噔"一下，那就是了。&lt;/p&gt;&lt;/section&gt;
+
+      &lt;section id="treasures"&gt;&lt;p className="notes-wiki-label"&gt;TREASURE · 数字角落&lt;/p&gt;&lt;h2&gt;那些藏起来的宝藏&lt;/h2&gt;
+        &lt;h3&gt;画格世界&lt;/h3&gt;&lt;p&gt;黑白与彩色交替的画格，从日升岛到自由女神。有人说它们是"漫画"，我说它们是"画格世界"。在这个世界里，翻阅没有上限，收藏没有尽头，连最冷门的单本也能在某个角落找到。&lt;/p&gt;&lt;p&gt;日的、美的、欧的，只要你叫得出名字，它就在那里等着你。&lt;/p&gt;
+        &lt;h3&gt;会动的故事盒子&lt;/h3&gt;&lt;p&gt;如果画格世界还不够，那就打开会动的故事盒子。它装得下东京的深夜动画、首尔的豪门恩怨、好莱坞的特效大片，也装得下你周末瘫在沙发上的所有无聊。&lt;/p&gt;&lt;p&gt;不需要会员，不需要广告，不需要等更新——当然，更新这件事，得看盒子的心情。&lt;/p&gt;
+        &lt;h3&gt;可执行的冒险&lt;/h3&gt;&lt;p&gt;有些文件双击之后，会打开一个全新的世界。我们叫它"可执行的冒险"。它们来自各种绿色的角落，体积从几 MB 到几十 GB 不等，但共同点是：不需要你为它付费。&lt;/p&gt;&lt;p&gt;像素的、3A 的、独立的、老的新的，只要你想开始冒险，它就在桌面上等你。&lt;/p&gt;
+        &lt;h3&gt;数字灯塔&lt;/h3&gt;&lt;p&gt;墙的那边，有更广阔的海。但墙很高，门很少。这时候你需要一盏数字灯塔，它的光穿过墙顶，为你照亮通往外面的路。&lt;/p&gt;&lt;p&gt;灯塔有很多座，有的亮得稳定，有的偶尔闪烁，有的需要你自己去点亮。找到属于你的那一盏，海就属于你。&lt;/p&gt;
+        &lt;div className="notes-wiki-summary"&gt;&lt;span&gt;一句话理解&lt;/span&gt;&lt;p&gt;画格、故事盒、冒险、灯塔——四个词，四扇门。钥匙不在我手里，在你的好奇心和缘分里。&lt;/p&gt;&lt;/div&gt;
+      &lt;/section&gt;
+
+      &lt;section id="invitation"&gt;&lt;p className="notes-wiki-label"&gt;INVITATION · 邀请&lt;/p&gt;&lt;h2&gt;成为朋友吧&lt;/h2&gt;&lt;p&gt;想知道更多吗？我也想告诉你。但有些话，只能对朋友说。&lt;/p&gt;&lt;p&gt;试着成为我的朋友吧。拥有我，你将拥有一切。&lt;/p&gt;&lt;p&gt;（微笑）&lt;/p&gt;&lt;/section&gt;
+
+      &lt;section id="related"&gt;&lt;p className="notes-wiki-label"&gt;RELATED · 相关词条&lt;/p&gt;&lt;h2&gt;可以一起阅读&lt;/h2&gt;&lt;div className="notes-related-terms"&gt;&lt;span&gt;画格世界&lt;/span&gt;&lt;span&gt;故事盒子&lt;/span&gt;&lt;span&gt;可执行冒险&lt;/span&gt;&lt;span&gt;数字灯塔&lt;/span&gt;&lt;span&gt;创作伙伴&lt;/span&gt;&lt;span&gt;缘分与好奇心&lt;/span&gt;&lt;/div&gt;&lt;/section&gt;
+    &lt;/&gt;
+  );
+}
+
+export default function NotesPage() {
+  const { theme, toggleTheme, noTransition } = useTheme();
+  const [selectedId, setSelectedId] = useState(notes[0].id);
+  const [readerSize, setReaderSize] = useState&lt;ReaderSize&gt;("medium");
+  const [focusMode, setFocusMode] = useState(false);
+  const selectedNote = useMemo(() =&gt; notes.find((item) =&gt; item.id === selectedId) ?? notes[0], [selectedId]);
+
+  const toc: Array&lt;[string, string]&gt; = selectedNote.sections ?? [["definition", "定义"], ["components", "组成"], ["usage", "使用场景"], ["related", "相关词条"]];
+
+  return (
+    &lt;main className={`notes-page${focusMode ? " is-focus" : ""}${noTransition ? " no-transition" : ""}`} data-theme={theme} data-size={readerSize} suppressHydrationWarning&gt;
+      &lt;ContentHeader subtitle="NOTES &amp; FIELD GUIDE" activeHref="/notes" theme={theme} onToggleTheme={toggleTheme} /&gt;
+
+      &lt;section className="notes-section-heading"&gt;&lt;div&gt;&lt;p&gt;{wikiCategory.english}&lt;/p&gt;&lt;h2&gt;{wikiCategory.label}&lt;/h2&gt;&lt;/div&gt;&lt;p&gt;{wikiCategory.description}&lt;/p&gt;&lt;span&gt;{String(notes.length).padStart(2, "0")} ARTICLES&lt;/span&gt;&lt;/section&gt;
+
+      &lt;section className="notes-reading-layout"&gt;
+        &lt;aside className="notes-index"&gt;
+          &lt;div className="notes-index-heading"&gt;&lt;span&gt;文章目录&lt;/span&gt;&lt;b&gt;{wikiCategory.label}&lt;/b&gt;&lt;/div&gt;
+          &lt;div className="notes-index-list"&gt;{notes.map((note, index) =&gt; &lt;button type="button" key={note.id} className={selectedNote.id === note.id ? "is-active" : ""} onClick={() =&gt; setSelectedId(note.id)}&gt;&lt;span&gt;{String(index + 1).padStart(2, "0")}&lt;/span&gt;&lt;strong&gt;{note.title}&lt;/strong&gt;&lt;small&gt;{note.summary}&lt;/small&gt;&lt;em&gt;{note.readTime}&lt;/em&gt;&lt;/button&gt;)}&lt;/div&gt;
+        &lt;/aside&gt;
+
+        &lt;article className="notes-reader" key={selectedNote.id}&gt;
+          &lt;header className="notes-article-header"&gt;&lt;div className="notes-article-meta"&gt;&lt;span&gt;{wikiCategory.label}&lt;/span&gt;&lt;i /&gt;{selectedNote.date}&lt;i /&gt;{selectedNote.readTime}&lt;/div&gt;&lt;h1&gt;{selectedNote.title}&lt;/h1&gt;&lt;p&gt;{selectedNote.summary}&lt;/p&gt;&lt;div className="notes-article-tags"&gt;{selectedNote.tags.map((tag) =&gt; &lt;span key={tag}&gt;{tag}&lt;/span&gt;)}&lt;/div&gt;&lt;/header&gt;
+          &lt;div className="notes-article-body"&gt;{selectedNote.kind === "comparison" ? &lt;ComparisonContent /&gt; : selectedNote.kind === "guide" ? &lt;GuideContent /&gt; : selectedNote.kind === "letter" ? &lt;LetterContent /&gt; : selectedNote.kind === "pokemon-scale-world" ? &lt;PokemonScaleWorldContent /&gt; : &lt;WikiContent note={selectedNote} /&gt;}&lt;/div&gt;
+          &lt;footer className="notes-article-footer"&gt;&lt;span&gt;最后整理：{selectedNote.date}&lt;/span&gt;&lt;button type="button" onClick={() =&gt; { setFocusMode(false); window.scrollTo({ top: 0, behavior: "smooth" }); }}&gt;返回文章目录 ↑&lt;/button&gt;&lt;/footer&gt;
+        &lt;/article&gt;
+
+        &lt;aside className="notes-reader-tools"&gt;
+          &lt;div className="notes-tools-card"&gt;&lt;span&gt;阅读设置&lt;/span&gt;&lt;div className="notes-font-switch" aria-label="正文字号"&gt;{(["small", "medium", "large"] as ReaderSize[]).map((size, index) =&gt; &lt;button key={size} type="button" className={readerSize === size ? "is-active" : ""} onClick={() =&gt; setReaderSize(size)}&gt;A{index ? "+".repeat(index) : ""}&lt;/button&gt;)}&lt;/div&gt;&lt;button className="notes-focus-toggle" type="button" onClick={() =&gt; setFocusMode((current) =&gt; !current)}&gt;{focusMode ? "退出专注" : "专注阅读"}&lt;/button&gt;&lt;/div&gt;
+          &lt;nav className="notes-toc" aria-label="文章内目录"&gt;&lt;span&gt;本页目录&lt;/span&gt;{toc.map(([id, label], index) =&gt; &lt;a key={id} href={`#${id}`}&gt;&lt;i&gt;{String(index + 1).padStart(2, "0")}&lt;/i&gt;{label}&lt;/a&gt;)}&lt;/nav&gt;
+        &lt;/aside&gt;
+      &lt;/section&gt;
+
+      &lt;footer className="notes-footer"&gt;&lt;span&gt;© 2026 PL-HOME&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;/footer&gt;
+    &lt;/main&gt;
+  );
+}
+</code></pre></details>
+<details><summary>宝可梦比例世界页面</summary><pre><code>"use client";
+
+import { useMemo, useState } from "react";
+import { pokemonScaleWorldItems } from "./pokemonScaleWorldData";
+
+const regions = ["全部", "关都", "城都", "丰缘", "神奥", "伽勒尔", "洗翠", "帕底亚", "卡洛斯"];
+const editions = ["全部版本", "首发", "再版", "定番复售"];
+const categories = ["全部形态", "单包", "单品", "整套"];
+
+const yen = new Intl.NumberFormat("ja-JP");
+
+function localizeRelease(value: string) {
+  return value
+    .replace(" 発売", " 发售")
+    .replace(" 発送", " 发货")
+    .replace(/年/g, " 年 ")
+    .replace(/月/g, " 月 ")
+    .replace(/日/g, " 日")
+    .replace(/\s+/g, " ")
+    .trim();
+}
+
+export function PokemonScaleWorldContent() {
+  const [query, setQuery] = useState("");
+  const [region, setRegion] = useState("全部");
+  const [edition, setEdition] = useState("全部版本");
+  const [category, setCategory] = useState("全部形态");
+
+  const filteredItems = useMemo(() =&gt; {
+    const keyword = query.trim().toLowerCase();
+    return pokemonScaleWorldItems.filter((item) =&gt; {
+      const matchesQuery = !keyword || `${item.name}${item.region}`.toLowerCase().includes(keyword);
+      const matchesRegion = region === "全部" || item.region === region;
+      const matchesEdition = edition === "全部版本" || item.edition === edition;
+      const matchesCategory = category === "全部形态" || item.category === category;
+      return matchesQuery &amp;&amp; matchesRegion &amp;&amp; matchesEdition &amp;&amp; matchesCategory;
+    });
+  }, [category, edition, query, region]);
+
+  const groupedItems = useMemo(() =&gt; {
+    const years = new Map&lt;string, typeof filteredItems&gt;();
+    filteredItems.forEach((item) =&gt; {
+      const year = String(item.sort).slice(0, 4);
+      years.set(year, [...(years.get(year) ?? []), item]);
+    });
+    return [...years.entries()];
+  }, [filteredItems]);
+
+  const reissueCount = pokemonScaleWorldItems.filter((item) =&gt; item.edition === "再版").length;
+  const evergreenCount = pokemonScaleWorldItems.filter((item) =&gt; item.edition === "定番复售").length;
+
+  return (
+    &lt;&gt;
+      &lt;section id="intro" className="psw-intro"&gt;
+        &lt;p className="notes-wiki-label"&gt;ARCHIVE · 系列档案&lt;/p&gt;
+        &lt;h2&gt;把 1/20 的宝可梦世界排成一条时间线&lt;/h2&gt;
+        &lt;p&gt;Pokémon Scale World（ポケモンスケールワールド）由万代食玩推出，以约 1/20 的统一比例还原训练家与宝可梦。这里按官方独立销售记录归档：盲盒单包、整套、PB 限定、再受注和定番单品都分别保留。&lt;/p&gt;
+        &lt;div className="psw-stat-grid"&gt;
+          &lt;div&gt;&lt;strong&gt;{pokemonScaleWorldItems.length}&lt;/strong&gt;&lt;span&gt;条官方销售记录&lt;/span&gt;&lt;/div&gt;
+          &lt;div&gt;&lt;strong&gt;{reissueCount}&lt;/strong&gt;&lt;span&gt;次明确再受注&lt;/span&gt;&lt;/div&gt;
+          &lt;div&gt;&lt;strong&gt;{evergreenCount}&lt;/strong&gt;&lt;span&gt;款定番单品&lt;/span&gt;&lt;/div&gt;
+          &lt;div&gt;&lt;strong&gt;2019—2027&lt;/strong&gt;&lt;span&gt;已公布时间跨度&lt;/span&gt;&lt;/div&gt;
+        &lt;/div&gt;
+        &lt;div className="notes-wiki-summary"&gt;&lt;span&gt;阅读口径&lt;/span&gt;&lt;p&gt;价格同时保留日本官方税前价与含税价；“発売”记为发售，“発送”记为发货。时间线按实际发售 / 发货时间从早到晚排列。&lt;/p&gt;&lt;/div&gt;
+      &lt;/section&gt;
+
+      &lt;section id="method"&gt;
+        &lt;p className="notes-wiki-label"&gt;METHOD · 整理口径&lt;/p&gt;
+        &lt;h2&gt;哪些算一条，哪些算再版&lt;/h2&gt;
+        &lt;div className="notes-definition-grid psw-method-grid"&gt;
+          &lt;article&gt;&lt;span&gt;01&lt;/span&gt;&lt;b&gt;独立 SKU&lt;/b&gt;&lt;p&gt;同批盲盒单包与全套装拥有不同价格与商品页，因此分别收录。&lt;/p&gt;&lt;/article&gt;
+          &lt;article&gt;&lt;span&gt;02&lt;/span&gt;&lt;b&gt;再受注&lt;/b&gt;&lt;p&gt;官方标题含「再受注 / 再販」的记录标为再版，并尽量回链首次发行时间。&lt;/p&gt;&lt;/article&gt;
+          &lt;article&gt;&lt;span&gt;03&lt;/span&gt;&lt;b&gt;定番单品&lt;/b&gt;&lt;p&gt;2025 年起拆分长期销售的单品单列，避免与早期随机盲盒价格混淆。&lt;/p&gt;&lt;/article&gt;
+        &lt;/div&gt;
+        &lt;p className="psw-audit-note"&gt;资料核对至 2026 年 9 月 4 日，包含当时已公布、计划在 2027 年 3 月前发货的商品。官方可能调整预售与发货安排，购买前请以卡片链接中的商品页为准。&lt;/p&gt;
+      &lt;/section&gt;
+
+      &lt;section id="catalog" className="psw-catalog-section"&gt;
+        &lt;p className="notes-wiki-label"&gt;CATALOG · 完整目录&lt;/p&gt;
+        &lt;h2&gt;全部商品，按时间顺序&lt;/h2&gt;
+        &lt;div className="psw-filter-panel"&gt;
+          &lt;label className="psw-search"&gt;
+            &lt;span&gt;搜索商品或地区&lt;/span&gt;
+            &lt;input value={query} onChange={(event) =&gt; setQuery(event.target.value)} placeholder="例如：ゲンガー、关都、再受注" /&gt;
+          &lt;/label&gt;
+          &lt;div className="psw-select-row"&gt;
+            &lt;label&gt;&lt;span&gt;地区&lt;/span&gt;&lt;select value={region} onChange={(event) =&gt; setRegion(event.target.value)}&gt;{regions.map((item) =&gt; &lt;option key={item}&gt;{item}&lt;/option&gt;)}&lt;/select&gt;&lt;/label&gt;
+            &lt;label&gt;&lt;span&gt;版本&lt;/span&gt;&lt;select value={edition} onChange={(event) =&gt; setEdition(event.target.value)}&gt;{editions.map((item) =&gt; &lt;option key={item}&gt;{item}&lt;/option&gt;)}&lt;/select&gt;&lt;/label&gt;
+            &lt;label&gt;&lt;span&gt;形态&lt;/span&gt;&lt;select value={category} onChange={(event) =&gt; setCategory(event.target.value)}&gt;{categories.map((item) =&gt; &lt;option key={item}&gt;{item}&lt;/option&gt;)}&lt;/select&gt;&lt;/label&gt;
+          &lt;/div&gt;
+          &lt;div className="psw-region-chips" aria-label="按地区筛选"&gt;{regions.map((item) =&gt; &lt;button type="button" key={item} className={region === item ? "is-active" : ""} onClick={() =&gt; setRegion(item)}&gt;{item}&lt;/button&gt;)}&lt;/div&gt;
+          &lt;p className="psw-result-count"&gt;当前显示 &lt;strong&gt;{filteredItems.length}&lt;/strong&gt; / {pokemonScaleWorldItems.length} 条&lt;/p&gt;
+        &lt;/div&gt;
+
+        &lt;div className="psw-timeline"&gt;
+          {groupedItems.map(([year, items]) =&gt; (
+            &lt;div className="psw-year-group" key={year}&gt;
+              &lt;div className="psw-year-marker"&gt;&lt;strong&gt;{year}&lt;/strong&gt;&lt;span&gt;{items.length} ITEMS&lt;/span&gt;&lt;/div&gt;
+              &lt;div className="psw-card-grid"&gt;
+                {items.map((item) =&gt; (
+                  &lt;article className="psw-product-card" key={item.id}&gt;
+                    &lt;a className="psw-product-image" href={item.source} target="_blank" rel="noreferrer" aria-label={`打开 ${item.name} 官方商品页`}&gt;
+                      &lt;img src={item.image} alt={item.name} loading="lazy" /&gt;
+                      &lt;span&gt;{item.region}&lt;/span&gt;
+                    &lt;/a&gt;
+                    &lt;div className="psw-product-body"&gt;
+                      &lt;div className="psw-product-badges"&gt;&lt;span className={`is-${item.edition}`}&gt;{item.edition}&lt;/span&gt;&lt;span&gt;{item.category}&lt;/span&gt;{item.sort &gt; 20260904 &amp;&amp; &lt;span className="is-upcoming"&gt;已公布&lt;/span&gt;}&lt;/div&gt;
+                      &lt;h3&gt;{item.shortName}&lt;/h3&gt;
+                      &lt;dl&gt;
+                        &lt;div&gt;&lt;dt&gt;官方定价&lt;/dt&gt;&lt;dd&gt;¥{yen.format(item.price)} &lt;small&gt;税前&lt;/small&gt;&lt;/dd&gt;&lt;/div&gt;
+                        &lt;div&gt;&lt;dt&gt;含税价格&lt;/dt&gt;&lt;dd&gt;¥{yen.format(item.priceTax)}&lt;/dd&gt;&lt;/div&gt;
+                        &lt;div&gt;&lt;dt&gt;{item.release.includes("発送") ? "发货时间" : "发售时间"}&lt;/dt&gt;&lt;dd&gt;{localizeRelease(item.release).replace(/ (发售|发货)$/, "")}&lt;/dd&gt;&lt;/div&gt;
+                        {item.originalRelease &amp;&amp; &lt;div className="is-original"&gt;&lt;dt&gt;首次发行&lt;/dt&gt;&lt;dd&gt;{localizeRelease(item.originalRelease).replace(/ (发售|发货)$/, "")}&lt;/dd&gt;&lt;/div&gt;}
+                      &lt;/dl&gt;
+                      &lt;a className="psw-source-link" href={item.source} target="_blank" rel="noreferrer"&gt;万代官方商品页 ↗&lt;/a&gt;
+                    &lt;/div&gt;
+                  &lt;/article&gt;
+                ))}
+              &lt;/div&gt;
+            &lt;/div&gt;
+          ))}
+          {!filteredItems.length &amp;&amp; &lt;div className="psw-empty"&gt;&lt;strong&gt;没有匹配结果&lt;/strong&gt;&lt;span&gt;换一个关键词，或把筛选条件切回“全部”。&lt;/span&gt;&lt;/div&gt;}
+        &lt;/div&gt;
+      &lt;/section&gt;
+
+      &lt;section id="reissues"&gt;
+        &lt;p className="notes-wiki-label"&gt;REISSUE · 再版脉络&lt;/p&gt;
+        &lt;h2&gt;这条线怎么读&lt;/h2&gt;
+        &lt;div className="psw-reissue-notes"&gt;
+          &lt;article&gt;&lt;b&gt;2021—2024&lt;/b&gt;&lt;p&gt;早期再受注以关都、城都的人气角色与限定组合为主；同一造型在不同批次可能涨价，因此每次再版都保留独立价格。&lt;/p&gt;&lt;/article&gt;
+          &lt;article&gt;&lt;b&gt;2025 定番化&lt;/b&gt;&lt;p&gt;关都、城都、神奥的部分盲盒内容被拆成编号 01—24 的定番单品，消费者不再需要随机抽取。&lt;/p&gt;&lt;/article&gt;
+          &lt;article&gt;&lt;b&gt;2026—2027&lt;/b&gt;&lt;p&gt;定番编号延伸到丰缘 25—30，同时蜥蜴王、巨沼怪与丰缘三神兽陆续再受注。&lt;/p&gt;&lt;/article&gt;
+        &lt;/div&gt;
+      &lt;/section&gt;
+
+      &lt;section id="sources"&gt;
+        &lt;p className="notes-wiki-label"&gt;SOURCES · 来源&lt;/p&gt;
+        &lt;h2&gt;主要资料来源&lt;/h2&gt;
+        &lt;p&gt;商品名称、官方定价、发售 / 发货时间与图片均来自万代 Candy 官方商品页；系列定义与发行目录以万代系列页为主，Bulbapedia 仅用于交叉核对早期批次是否遗漏。&lt;/p&gt;
+        &lt;div className="psw-source-list"&gt;
+          &lt;a href="https://www.bandai.co.jp/candy/brand/brand154/" target="_blank" rel="noreferrer"&gt;&lt;span&gt;主来源&lt;/span&gt;&lt;b&gt;万代 Candy · 系列商品目录&lt;/b&gt;&lt;i&gt;↗&lt;/i&gt;&lt;/a&gt;
+          &lt;a href="https://www.bandai.co.jp/candy/pokemonscaleworld/" target="_blank" rel="noreferrer"&gt;&lt;span&gt;系列页&lt;/span&gt;&lt;b&gt;Pokémon Scale World 官方专题&lt;/b&gt;&lt;i&gt;↗&lt;/i&gt;&lt;/a&gt;
+          &lt;a href="https://bulbapedia.bulbagarden.net/wiki/Pok%C3%A9mon_Scale_World" target="_blank" rel="noreferrer"&gt;&lt;span&gt;交叉核对&lt;/span&gt;&lt;b&gt;Bulbapedia · Pokémon Scale World&lt;/b&gt;&lt;i&gt;↗&lt;/i&gt;&lt;/a&gt;
+        &lt;/div&gt;
+      &lt;/section&gt;
+    &lt;/&gt;
+  );
+}
+</code></pre></details>
+<details><summary>宝可梦比例世界数据</summary><pre><code>export type PokemonScaleWorldItem = {
+  id: string;
+  name: string;
+  shortName: string;
+  region: string;
+  edition: "首发" | "再版" | "定番复售";
+  category: "单包" | "单品" | "整套";
+  price: number;
+  priceTax: number;
+  release: string;
+  sort: number;
+  image: string;
+  source: string;
+  originalRelease?: string;
+};
+
+export const pokemonScaleWorldItems: PokemonScaleWorldItem[] = [
+  {"id":"1000136257","name":"ポケモンスケールワールド カントー地方 オーキド博士セット【プレミアムバンダイ限定】","shortName":"カントー地方 オーキド博士セット【プレミアムバンダイ限定】","region":"关都","edition":"首发","category":"整套","price":9090,"priceTax":9999,"release":"2019年10月 発送","sort":20191001,"image":"/notes/pokemon-scale-world/1000136257.webp","source":"https://www.bandai.co.jp/candy/products/2019/1000136257.html"},
+  {"id":"4549660393740000","name":"ポケモンスケールワールド カントー地方","shortName":"カントー地方","region":"关都","edition":"首发","category":"单包","price":500,"priceTax":550,"release":"2019年10月28日 発売","sort":20191028,"image":"/notes/pokemon-scale-world/4549660393740000.webp","source":"https://www.bandai.co.jp/candy/products/2019/4549660393740000.html"},
+  {"id":"4549660393764000","name":"ポケモンスケールワールド カントー地方 フシギバナ","shortName":"カントー地方 フシギバナ","region":"关都","edition":"首发","category":"单品","price":3600,"priceTax":3960,"release":"2019年10月28日 発売","sort":20191028,"image":"/notes/pokemon-scale-world/4549660393764000.webp","source":"https://www.bandai.co.jp/candy/products/2019/4549660393764000.html"},
+  {"id":"4549660393771000","name":"ポケモンスケールワールド カントー地方 リザードン","shortName":"カントー地方 リザードン","region":"关都","edition":"首发","category":"单品","price":1980,"priceTax":2178,"release":"2019年10月28日 発売","sort":20191028,"image":"/notes/pokemon-scale-world/4549660393771000.webp","source":"https://www.bandai.co.jp/candy/products/2019/4549660393771000.html"},
+  {"id":"4549660393788000","name":"ポケモンスケールワールド カントー地方 カメックス","shortName":"カントー地方 カメックス","region":"关都","edition":"首发","category":"单品","price":2200,"priceTax":2420,"release":"2019年10月28日 発売","sort":20191028,"image":"/notes/pokemon-scale-world/4549660393788000.webp","source":"https://www.bandai.co.jp/candy/products/2019/4549660393788000.html"},
+  {"id":"1000136258","name":"ポケモンスケールワールド カントー地方 リーフ＆ピクシー＆ゲンガー【プレミアムバンダイ限定】","shortName":"カントー地方 リーフ＆ピクシー＆ゲンガー【プレミアムバンダイ限定】","region":"关都","edition":"首发","category":"单品","price":4500,"priceTax":4950,"release":"2019年11月 発送","sort":20191101,"image":"/notes/pokemon-scale-world/1000136258.webp","source":"https://www.bandai.co.jp/candy/products/2019/1000136258.html"},
+  {"id":"1000136260","name":"ポケモンスケールワールド カントー地方 グリーン＆ウインディ【プレミアムバンダイ限定】","shortName":"カントー地方 グリーン＆ウインディ【プレミアムバンダイ限定】","region":"关都","edition":"首发","category":"单品","price":4000,"priceTax":4400,"release":"2019年11月 発送","sort":20191101,"image":"/notes/pokemon-scale-world/1000136260.webp","source":"https://www.bandai.co.jp/candy/products/2019/1000136260.html"},
+  {"id":"1000137722","name":"ポケモンスケールワールド カントー地方 シルフカンパニーセット【プレミアムバンダイ限定】","shortName":"カントー地方 シルフカンパニーセット【プレミアムバンダイ限定】","region":"关都","edition":"首发","category":"整套","price":8000,"priceTax":8800,"release":"2019年12月 発送","sort":20191201,"image":"/notes/pokemon-scale-world/1000137722.webp","source":"https://www.bandai.co.jp/candy/products/2019/1000137722.html"},
+  {"id":"4549660425250000","name":"ポケモンスケールワールド ジョウト地方","shortName":"ジョウト地方","region":"城都","edition":"首发","category":"单包","price":500,"priceTax":550,"release":"2020年1月27日 発売","sort":20200127,"image":"/notes/pokemon-scale-world/4549660425250000.webp","source":"https://www.bandai.co.jp/candy/products/2020/4549660425250000.html"},
+  {"id":"4549660464457000","name":"ポケモンスケールワールド ジョウト地方 セット","shortName":"ジョウト地方 セット","region":"城都","edition":"首发","category":"整套","price":4000,"priceTax":4400,"release":"2020年1月27日 発売","sort":20200127,"image":"/notes/pokemon-scale-world/4549660464457000.webp","source":"https://www.bandai.co.jp/candy/products/2020/4549660464457000.html"},
+  {"id":"4549660425267000","name":"ポケモンスケールワールド ジョウト地方 オーダイル","shortName":"ジョウト地方 オーダイル","region":"城都","edition":"首发","category":"单品","price":3600,"priceTax":3960,"release":"2020年3月16日 発売","sort":20200316,"image":"/notes/pokemon-scale-world/4549660425267000.webp","source":"https://www.bandai.co.jp/candy/products/2020/4549660425267000.html"},
+  {"id":"4549660425281000","name":"ポケモンスケールワールド ジョウト地方 メガニウム","shortName":"ジョウト地方 メガニウム","region":"城都","edition":"首发","category":"单品","price":2700,"priceTax":2970,"release":"2020年3月16日 発売","sort":20200316,"image":"/notes/pokemon-scale-world/4549660425281000.webp","source":"https://www.bandai.co.jp/candy/products/2020/4549660425281000.html"},
+  {"id":"1000140057","name":"ポケモンスケールワールド ジョウト地方 コトネ＆ベイリーフ＆ネイティ＆ムチュール【PB・ポケモンセンター限定】","shortName":"ジョウト地方 コトネ＆ベイリーフ＆ネイティ＆ムチュール【PB・ポケモンセンター限定】","region":"城都","edition":"首发","category":"单品","price":3200,"priceTax":3520,"release":"2020年4月 発送","sort":20200401,"image":"/notes/pokemon-scale-world/1000140057.webp","source":"https://www.bandai.co.jp/candy/products/2020/1000140057.html"},
+  {"id":"1000140058","name":"ポケモンスケールワールド ジョウト地方 シルバー＆アリゲイツ＆ニューラ【プレミアムバンダイ・ポケモンセンター限定】","shortName":"ジョウト地方 シルバー＆アリゲイツ＆ニューラ【プレミアムバンダイ・ポケモンセンター限定】","region":"城都","edition":"首发","category":"单品","price":3200,"priceTax":3520,"release":"2020年4月 発送","sort":20200401,"image":"/notes/pokemon-scale-world/1000140058.webp","source":"https://www.bandai.co.jp/candy/products/2020/1000140058.html"},
+  {"id":"4549660464440000","name":"ポケモンスケールワールド カントー地方 セット","shortName":"カントー地方 セット","region":"关都","edition":"首发","category":"整套","price":3000,"priceTax":3300,"release":"2020年4月13日 発売","sort":20200413,"image":"/notes/pokemon-scale-world/4549660464440000.webp","source":"https://www.bandai.co.jp/candy/products/2020/4549660464440000.html"},
+  {"id":"1000140056","name":"ポケモンスケールワールド ジョウト地方 マツバ＆ムウマ＆セレビィ【プレミアムバンダイ・ポケモンセンター限定】","shortName":"ジョウト地方 マツバ＆ムウマ＆セレビィ【プレミアムバンダイ・ポケモンセンター限定】","region":"城都","edition":"首发","category":"单品","price":3000,"priceTax":3300,"release":"2020年5月 発送","sort":20200501,"image":"/notes/pokemon-scale-world/1000140056.webp","source":"https://www.bandai.co.jp/candy/products/2020/1000140056.html"},
+  {"id":"1000140055","name":"ポケモンスケールワールド ジョウト地方 ライコウ＆エンテイ＆スイクン【プレミアムバンダイ・ポケモンセンター限定】","shortName":"ジョウト地方 ライコウ＆エンテイ＆スイクン【プレミアムバンダイ・ポケモンセンター限定】","region":"城都","edition":"首发","category":"单品","price":9090,"priceTax":9999,"release":"2020年6月 発送","sort":20200601,"image":"/notes/pokemon-scale-world/1000140055.webp","source":"https://www.bandai.co.jp/candy/products/2020/1000140055.html"},
+  {"id":"4549660465096000","name":"ポケモンスケールワールド カントー地方2","shortName":"カントー地方2","region":"关都","edition":"首发","category":"单包","price":500,"priceTax":550,"release":"2020年6月29日 発売","sort":20200629,"image":"/notes/pokemon-scale-world/4549660465096000.webp","source":"https://www.bandai.co.jp/candy/products/2020/4549660465096000.html"},
+  {"id":"4549660465102000","name":"ポケモンスケールワールド カントー地方2 セット","shortName":"カントー地方2 セット","region":"关都","edition":"首发","category":"整套","price":3000,"priceTax":3300,"release":"2020年6月29日 発売","sort":20200629,"image":"/notes/pokemon-scale-world/4549660465102000.webp","source":"https://www.bandai.co.jp/candy/products/2020/4549660465102000.html"},
+  {"id":"1000142576","name":"ポケモンスケールワールド カントー地方 ワタル＆カイリュー","shortName":"カントー地方 ワタル＆カイリュー","region":"关都","edition":"首发","category":"单品","price":4500,"priceTax":4950,"release":"2020年7月 発送","sort":20200701,"image":"/notes/pokemon-scale-world/1000142576.webp","source":"https://www.bandai.co.jp/candy/products/2020/1000142576.html"},
+  {"id":"1000142581","name":"ポケモンスケールワールド カントー地方 レッド＆カビゴン＆ポケモンの笛","shortName":"カントー地方 レッド＆カビゴン＆ポケモンの笛","region":"关都","edition":"首发","category":"单品","price":4500,"priceTax":4950,"release":"2020年8月 発送","sort":20200801,"image":"/notes/pokemon-scale-world/1000142581.webp","source":"https://www.bandai.co.jp/candy/products/2020/1000142581.html"},
+  {"id":"1000145782","name":"ポケモンスケールワールド ガラル地方 ゴリランダー","shortName":"ガラル地方 ゴリランダー","region":"伽勒尔","edition":"首发","category":"单品","price":3600,"priceTax":3960,"release":"2020年9月 発送","sort":20200901,"image":"/notes/pokemon-scale-world/1000145782.webp","source":"https://www.bandai.co.jp/candy/products/2020/1000145782.html"},
+  {"id":"4549660503798000","name":"ポケモンスケールワールド ガラル地方 セット","shortName":"ガラル地方 セット","region":"伽勒尔","edition":"首发","category":"整套","price":3500,"priceTax":3850,"release":"2020年9月28日 発売","sort":20200928,"image":"/notes/pokemon-scale-world/4549660503798000.webp","source":"https://www.bandai.co.jp/candy/products/2020/4549660503798000.html"},
+  {"id":"4549660504153000","name":"ポケモンスケールワールド ガラル地方","shortName":"ガラル地方","region":"伽勒尔","edition":"首发","category":"单包","price":500,"priceTax":550,"release":"2020年9月28日 発売","sort":20200928,"image":"/notes/pokemon-scale-world/4549660504153000.webp","source":"https://www.bandai.co.jp/candy/products/2020/4549660504153000.html"},
+  {"id":"1000146235","name":"ポケモンスケールワールド ガラル地方 ルリナ＆カジリガメ","shortName":"ガラル地方 ルリナ＆カジリガメ","region":"伽勒尔","edition":"首发","category":"单品","price":3600,"priceTax":3960,"release":"2020年11月 発送","sort":20201101,"image":"/notes/pokemon-scale-world/1000146235.webp","source":"https://www.bandai.co.jp/candy/products/2020/1000146235.html"},
+  {"id":"1000147153","name":"ポケモンスケールワールド ガラル地方 キバナ＆ジュラルドン","shortName":"ガラル地方 キバナ＆ジュラルドン","region":"伽勒尔","edition":"首发","category":"单品","price":4500,"priceTax":4950,"release":"2020年12月 発送","sort":20201201,"image":"/notes/pokemon-scale-world/1000147153.webp","source":"https://www.bandai.co.jp/candy/products/2020/1000147153.html"},
+  {"id":"1000148510","name":"ポケモンスケールワールド ガラル地方 アーマーガア","shortName":"ガラル地方 アーマーガア","region":"伽勒尔","edition":"首发","category":"单品","price":3600,"priceTax":3960,"release":"2021年1月 発送","sort":20210101,"image":"/notes/pokemon-scale-world/1000148510.webp","source":"https://www.bandai.co.jp/candy/products/2021/1000148510.html"},
+  {"id":"4549660503842000","name":"ポケモンスケールワールド ガラル地方2","shortName":"ガラル地方2","region":"伽勒尔","edition":"首发","category":"单包","price":500,"priceTax":550,"release":"2021年1月25日 発売","sort":20210125,"image":"/notes/pokemon-scale-world/4549660503842000.webp","source":"https://www.bandai.co.jp/candy/products/2021/4549660503842000.html"},
+  {"id":"1000149158","name":"ポケモンスケールワールド ガラル地方 サイトウ＆カポエラー","shortName":"ガラル地方 サイトウ＆カポエラー","region":"伽勒尔","edition":"首发","category":"单品","price":3200,"priceTax":3520,"release":"2021年2月 発送","sort":20210201,"image":"/notes/pokemon-scale-world/1000149158.webp","source":"https://www.bandai.co.jp/candy/products/2021/1000149158.html"},
+  {"id":"1000149159","name":"ポケモンスケールワールド ガラル地方 オニオン＆サニゴーン＆ミミッキュ","shortName":"ガラル地方 オニオン＆サニゴーン＆ミミッキュ","region":"伽勒尔","edition":"首发","category":"单品","price":2700,"priceTax":2970,"release":"2021年2月 発送","sort":20210201,"image":"/notes/pokemon-scale-world/1000149159.webp","source":"https://www.bandai.co.jp/candy/products/2021/1000149159.html"},
+  {"id":"4549660503859000","name":"ポケモンスケールワールド ガラル地方2 セット","shortName":"ガラル地方2 セット","region":"伽勒尔","edition":"首发","category":"整套","price":3500,"priceTax":3850,"release":"2021年2月8日 発売","sort":20210208,"image":"/notes/pokemon-scale-world/4549660503859000.webp","source":"https://www.bandai.co.jp/candy/products/2021/4549660503859000.html"},
+  {"id":"1000151813","name":"ポケモンスケールワールド ガラル地方 ダンデ＆ドラパルト","shortName":"ガラル地方 ダンデ＆ドラパルト","region":"伽勒尔","edition":"首发","category":"单品","price":5000,"priceTax":5500,"release":"2021年4月 発送","sort":20210401,"image":"/notes/pokemon-scale-world/1000151813.webp","source":"https://www.bandai.co.jp/candy/products/2021/1000151813.html"},
+  {"id":"1000154065","name":"ポケモンスケールワールド ホウエン地方 ジュカイン","shortName":"ホウエン地方 ジュカイン","region":"丰缘","edition":"首发","category":"单品","price":3000,"priceTax":3300,"release":"2021年5月 発送","sort":20210501,"image":"/notes/pokemon-scale-world/1000154065.webp","source":"https://www.bandai.co.jp/candy/products/2021/1000154065.html"},
+  {"id":"1000154066","name":"ポケモンスケールワールド ホウエン地方 ラグラージ","shortName":"ホウエン地方 ラグラージ","region":"丰缘","edition":"首发","category":"单品","price":3000,"priceTax":3300,"release":"2021年5月 発送","sort":20210501,"image":"/notes/pokemon-scale-world/1000154066.webp","source":"https://www.bandai.co.jp/candy/products/2021/1000154066.html"},
+  {"id":"1000154069","name":"ポケモンスケールワールド ガラル地方 ネズ＆タチフサグマ","shortName":"ガラル地方 ネズ＆タチフサグマ","region":"伽勒尔","edition":"首发","category":"单品","price":4000,"priceTax":4400,"release":"2021年6月 発送","sort":20210601,"image":"/notes/pokemon-scale-world/1000154069.webp","source":"https://www.bandai.co.jp/candy/products/2021/1000154069.html"},
+  {"id":"4549660582885000","name":"ポケモンスケールワールド ホウエン地方","shortName":"ホウエン地方","region":"丰缘","edition":"首发","category":"单包","price":500,"priceTax":550,"release":"2021年6月7日 発売","sort":20210607,"image":"/notes/pokemon-scale-world/4549660582885000.webp","source":"https://www.bandai.co.jp/candy/products/2021/4549660582885000.html"},
+  {"id":"4549660582892000","name":"ポケモンスケールワールド ホウエン地方 セット","shortName":"ホウエン地方 セット","region":"丰缘","edition":"首发","category":"整套","price":3000,"priceTax":3300,"release":"2021年6月7日 発売","sort":20210607,"image":"/notes/pokemon-scale-world/4549660582892000.webp","source":"https://www.bandai.co.jp/candy/products/2021/4549660582892000.html"},
+  {"id":"1000155117","name":"ポケモンスケールワールド ホウエン地方 ミツル＆エルレイド","shortName":"ホウエン地方 ミツル＆エルレイド","region":"丰缘","edition":"首发","category":"单品","price":2500,"priceTax":2750,"release":"2021年7月 発送","sort":20210701,"image":"/notes/pokemon-scale-world/1000155117.webp","source":"https://www.bandai.co.jp/candy/products/2021/1000155117.html"},
+  {"id":"1000155904","name":"ポケモンスケールワールド ホウエン地方 ミクリ＆ミロカロス","shortName":"ホウエン地方 ミクリ＆ミロカロス","region":"丰缘","edition":"首发","category":"单品","price":4500,"priceTax":4950,"release":"2021年7月 発送","sort":20210701,"image":"/notes/pokemon-scale-world/1000155904.webp","source":"https://www.bandai.co.jp/candy/products/2021/1000155904.html"},
+  {"id":"1000155905","name":"ポケモンスケールワールド ホウエン地方 ダイゴ＆メタグロス","shortName":"ホウエン地方 ダイゴ＆メタグロス","region":"丰缘","edition":"首发","category":"单品","price":5000,"priceTax":5500,"release":"2021年8月 発送","sort":20210801,"image":"/notes/pokemon-scale-world/1000155905.webp","source":"https://www.bandai.co.jp/candy/products/2021/1000155905.html"},
+  {"id":"4549660583240000","name":"ポケモンスケールワールド ホウエン地方2","shortName":"ホウエン地方2","region":"丰缘","edition":"首发","category":"单包","price":500,"priceTax":550,"release":"2021年8月30日 発売","sort":20210830,"image":"/notes/pokemon-scale-world/4549660583240000.webp","source":"https://www.bandai.co.jp/candy/products/2021/4549660583240000.html"},
+  {"id":"4549660583257000","name":"ポケモンスケールワールド ホウエン地方2 セット","shortName":"ホウエン地方2 セット","region":"丰缘","edition":"首发","category":"整套","price":3000,"priceTax":3300,"release":"2021年8月30日 発売","sort":20210830,"image":"/notes/pokemon-scale-world/4549660583257000.webp","source":"https://www.bandai.co.jp/candy/products/2021/4549660583257000.html"},
+  {"id":"1000157140","name":"ポケモンスケールワールド ガラル地方 ホップ＆バイウールー","shortName":"ガラル地方 ホップ＆バイウールー","region":"伽勒尔","edition":"首发","category":"单品","price":3200,"priceTax":3520,"release":"2021年9月23日 発送","sort":20210923,"image":"/notes/pokemon-scale-world/1000157140.webp","source":"https://www.bandai.co.jp/candy/products/2021/1000157140.html"},
+  {"id":"1000157989","name":"ポケモンスケールワールド ホウエン地方 グラードン","shortName":"ホウエン地方 グラードン","region":"丰缘","edition":"首发","category":"单品","price":7200,"priceTax":7920,"release":"2021年10月 発送","sort":20211001,"image":"/notes/pokemon-scale-world/1000157989.webp","source":"https://www.bandai.co.jp/candy/products/2021/1000157989.html"},
+  {"id":"1000157996","name":"ポケモンスケールワールド ホウエン地方 カイオーガ","shortName":"ホウエン地方 カイオーガ","region":"丰缘","edition":"首发","category":"单品","price":5000,"priceTax":5500,"release":"2021年11月 発送","sort":20211101,"image":"/notes/pokemon-scale-world/1000157996.webp","source":"https://www.bandai.co.jp/candy/products/2021/1000157996.html"},
+  {"id":"1000157997","name":"ポケモンスケールワールド ホウエン地方 レックウザ","shortName":"ホウエン地方 レックウザ","region":"丰缘","edition":"首发","category":"单品","price":3600,"priceTax":3960,"release":"2021年11月 発送","sort":20211101,"image":"/notes/pokemon-scale-world/1000157997.webp","source":"https://www.bandai.co.jp/candy/products/2021/1000157997.html"},
+  {"id":"4549660628958000","name":"ポケモンスケールワールド シンオウ地方","shortName":"シンオウ地方","region":"神奥","edition":"首发","category":"单包","price":550,"priceTax":605,"release":"2022年1月24日 発売","sort":20220124,"image":"/notes/pokemon-scale-world/4549660628958000.webp","source":"https://www.bandai.co.jp/candy/products/2022/4549660628958000.html"},
+  {"id":"4549660699736000","name":"ポケモンスケールワールド シンオウ地方 セット","shortName":"シンオウ地方 セット","region":"神奥","edition":"首发","category":"整套","price":3300,"priceTax":3630,"release":"2022年1月24日 発売","sort":20220124,"image":"/notes/pokemon-scale-world/4549660699736000.webp","source":"https://www.bandai.co.jp/candy/products/2022/4549660699736000.html"},
+  {"id":"1000162706","name":"ポケモンスケールワールド シンオウ地方 ナタネ＆ドダイトス","shortName":"シンオウ地方 ナタネ＆ドダイトス","region":"神奥","edition":"首发","category":"单品","price":4000,"priceTax":4400,"release":"2022年2月 発送","sort":20220201,"image":"/notes/pokemon-scale-world/1000162706.webp","source":"https://www.bandai.co.jp/candy/products/2022/1000162706.html"},
+  {"id":"1000162710","name":"ポケモンスケールワールド シンオウ地方 ジュン＆ハヤシガメ＆ムクホーク","shortName":"シンオウ地方 ジュン＆ハヤシガメ＆ムクホーク","region":"神奥","edition":"首发","category":"单品","price":3800,"priceTax":4180,"release":"2022年3月 発送","sort":20220301,"image":"/notes/pokemon-scale-world/1000162710.webp","source":"https://www.bandai.co.jp/candy/products/2022/1000162710.html"},
+  {"id":"1000164024","name":"ポケモンスケールワールド ガラル地方 ビート＆ミブリム＆テブリム＆ブリムオン","shortName":"ガラル地方 ビート＆ミブリム＆テブリム＆ブリムオン","region":"伽勒尔","edition":"首发","category":"单品","price":4500,"priceTax":4950,"release":"2022年5月 発送","sort":20220501,"image":"/notes/pokemon-scale-world/1000164024.webp","source":"https://www.bandai.co.jp/candy/products/2022/1000164024.html"},
+  {"id":"1000167057","name":"ポケモンスケールワールド シンオウ地方 デンジ＆エレキブル","shortName":"シンオウ地方 デンジ＆エレキブル","region":"神奥","edition":"首发","category":"单品","price":4500,"priceTax":4950,"release":"2022年6月 発送","sort":20220601,"image":"/notes/pokemon-scale-world/1000167057.webp","source":"https://www.bandai.co.jp/candy/products/2022/1000167057.html"},
+  {"id":"4549660820727000","name":"ポケモンスケールワールド ジョウト地方(再受注)","shortName":"ジョウト地方(再受注)","region":"城都","edition":"再版","category":"单包","price":550,"priceTax":605,"release":"2022年6月 発売","sort":20220601,"image":"/notes/pokemon-scale-world/4549660820727000.webp","source":"https://www.bandai.co.jp/candy/products/2022/4549660820727000.html","originalRelease":"2020年1月27日 発売"},
+  {"id":"4549660820734000","name":"ポケモンスケールワールド ジョウト地方 セット(再受注)","shortName":"ジョウト地方 セット(再受注)","region":"城都","edition":"再版","category":"整套","price":4400,"priceTax":4840,"release":"2022年6月 発売","sort":20220601,"image":"/notes/pokemon-scale-world/4549660820734000.webp","source":"https://www.bandai.co.jp/candy/products/2022/4549660820734000.html","originalRelease":"2020年1月27日 発売"},
+  {"id":"4549660699767000","name":"ポケモンスケールワールド シンオウ地方2","shortName":"シンオウ地方2","region":"神奥","edition":"首发","category":"单包","price":550,"priceTax":605,"release":"2022年6月20日 発売","sort":20220620,"image":"/notes/pokemon-scale-world/4549660699767000.webp","source":"https://www.bandai.co.jp/candy/products/2022/4549660699767000.html"},
+  {"id":"4549660699774000","name":"ポケモンスケールワールド シンオウ地方2 セット","shortName":"シンオウ地方2 セット","region":"神奥","edition":"首发","category":"整套","price":3300,"priceTax":3630,"release":"2022年6月20日 発売","sort":20220620,"image":"/notes/pokemon-scale-world/4549660699774000.webp","source":"https://www.bandai.co.jp/candy/products/2022/4549660699774000.html"},
+  {"id":"1000167889","name":"ポケモンスケールワールド シンオウ地方 ロズレイド＆トリトドン（にしのうみ）＆ミカルゲ＆トゲキッス","shortName":"シンオウ地方 ロズレイド＆トリトドン（にしのうみ）＆ミカルゲ＆トゲキッス","region":"神奥","edition":"首发","category":"单品","price":4000,"priceTax":4400,"release":"2022年8月 発送","sort":20220801,"image":"/notes/pokemon-scale-world/1000167889.webp","source":"https://www.bandai.co.jp/candy/products/2022/1000167889.html"},
+  {"id":"1000167890","name":"ポケモンスケールワールド シンオウ地方 シロナ&amp;ガブリアス","shortName":"シンオウ地方 シロナ&amp;ガブリアス","region":"神奥","edition":"首发","category":"单品","price":5000,"priceTax":5500,"release":"2022年8月 発送","sort":20220801,"image":"/notes/pokemon-scale-world/1000167890.webp","source":"https://www.bandai.co.jp/candy/products/2022/1000167890.html"},
+  {"id":"1000169076","name":"ポケモンスケールワールド ジョウト地方 コトネ＆ベイリーフ＆ネイティ＆ムチュール【PB・ポケモンセンター限定】【再受注】","shortName":"ジョウト地方 コトネ＆ベイリーフ＆ネイティ＆ムチュール【PB・ポケモンセンター限定】【再受注】","region":"城都","edition":"再版","category":"单品","price":3200,"priceTax":3520,"release":"2022年8月 発送","sort":20220801,"image":"/notes/pokemon-scale-world/1000169076.webp","source":"https://www.bandai.co.jp/candy/products/2022/1000169076.html","originalRelease":"2020年4月 発送"},
+  {"id":"1000169077","name":"ポケモンスケールワールド ジョウト地方 シルバー＆アリゲイツ＆ニューラ【PB・ポケモンセンター限定】【再受注】","shortName":"ジョウト地方 シルバー＆アリゲイツ＆ニューラ【PB・ポケモンセンター限定】【再受注】","region":"城都","edition":"再版","category":"单品","price":3200,"priceTax":3520,"release":"2022年8月 発送","sort":20220801,"image":"/notes/pokemon-scale-world/1000169077.webp","source":"https://www.bandai.co.jp/candy/products/2022/1000169077.html","originalRelease":"2020年4月 発送"},
+  {"id":"1000167888","name":"ポケモンスケールワールド シンオウ地方 アルセウス","shortName":"シンオウ地方 アルセウス","region":"神奥","edition":"首发","category":"单品","price":5000,"priceTax":5500,"release":"2022年9月 発送","sort":20220901,"image":"/notes/pokemon-scale-world/1000167888.webp","source":"https://www.bandai.co.jp/candy/products/2022/1000167888.html"},
+  {"id":"1000169078","name":"ポケモンスケールワールド ジョウト地方 ライコウ＆エンテイ＆スイクン【PB・ポケモンセンター限定】【再受注】","shortName":"ジョウト地方 ライコウ＆エンテイ＆スイクン【PB・ポケモンセンター限定】【再受注】","region":"城都","edition":"再版","category":"单品","price":9090,"priceTax":9999,"release":"2022年9月 発送","sort":20220901,"image":"/notes/pokemon-scale-world/1000169078.webp","source":"https://www.bandai.co.jp/candy/products/2022/1000169078.html","originalRelease":"2020年6月 発送"},
+  {"id":"4549660820741000","name":"ポケモンスケールワールド カントー地方（再受注）","shortName":"カントー地方（再受注）","region":"关都","edition":"再版","category":"单包","price":550,"priceTax":605,"release":"2022年11月14日 発売","sort":20221114,"image":"/notes/pokemon-scale-world/4549660820741000.webp","source":"https://www.bandai.co.jp/candy/products/2022/4549660820741000.html","originalRelease":"2019年10月28日 発売"},
+  {"id":"4549660820758000","name":"ポケモンスケールワールド カントー地方 セット（再受注）","shortName":"カントー地方 セット（再受注）","region":"关都","edition":"再版","category":"整套","price":3300,"priceTax":3630,"release":"2022年11月14日 発売","sort":20221114,"image":"/notes/pokemon-scale-world/4549660820758000.webp","source":"https://www.bandai.co.jp/candy/products/2022/4549660820758000.html","originalRelease":"2020年4月13日 発売"},
+  {"id":"1000172232","name":"ポケモンスケールワールド カントー地方 フリーザー＆サンダー&amp;ファイヤー","shortName":"カントー地方 フリーザー＆サンダー&amp;ファイヤー","region":"关都","edition":"首发","category":"单品","price":12500,"priceTax":13750,"release":"2022年12月 発送","sort":20221201,"image":"/notes/pokemon-scale-world/1000172232.webp","source":"https://www.bandai.co.jp/candy/products/2022/1000172232.html"},
+  {"id":"4549660835165000","name":"ポケモンスケールワールド カントー地方3","shortName":"カントー地方3","region":"关都","edition":"首发","category":"单包","price":550,"priceTax":605,"release":"2022年12月19日 発売","sort":20221219,"image":"/notes/pokemon-scale-world/4549660835165000.webp","source":"https://www.bandai.co.jp/candy/products/2022/4549660835165000.html"},
+  {"id":"4549660835172000","name":"ポケモンスケールワールド カントー地方3 セット","shortName":"カントー地方3 セット","region":"关都","edition":"首发","category":"整套","price":3300,"priceTax":3630,"release":"2022年12月19日 発売","sort":20221219,"image":"/notes/pokemon-scale-world/4549660835172000.webp","source":"https://www.bandai.co.jp/candy/products/2022/4549660835172000.html"},
+  {"id":"1000179106","name":"ポケモンスケールワールド カントー地方 グリーン＆ウインディ【プレミアムバンダイ限定】","shortName":"カントー地方 グリーン＆ウインディ【プレミアムバンダイ限定】","region":"关都","edition":"首发","category":"单品","price":5200,"priceTax":5720,"release":"2023年1月 発送","sort":20230101,"image":"/notes/pokemon-scale-world/1000179106.webp","source":"https://www.bandai.co.jp/candy/products/2023/1000179106.html"},
+  {"id":"1000179662","name":"ポケモンスケールワールド カントー地方 タケシ＆イワーク","shortName":"カントー地方 タケシ＆イワーク","region":"关都","edition":"首发","category":"单品","price":6800,"priceTax":7480,"release":"2023年1月 発送","sort":20230101,"image":"/notes/pokemon-scale-world/1000179662.webp","source":"https://www.bandai.co.jp/candy/products/2023/1000179662.html"},
+  {"id":"1000179664","name":"ポケモンスケールワールド カントー地方 オーキド博士セット","shortName":"カントー地方 オーキド博士セット","region":"关都","edition":"首发","category":"整套","price":10500,"priceTax":11550,"release":"2023年2月 発送","sort":20230201,"image":"/notes/pokemon-scale-world/1000179664.webp","source":"https://www.bandai.co.jp/candy/products/2023/1000179664.html"},
+  {"id":"1000181875","name":"ポケモンスケールワールド カントー地方 ニドラン♂&amp;ニドリーノ&amp;ニドキング","shortName":"カントー地方 ニドラン♂&amp;ニドリーノ&amp;ニドキング","region":"关都","edition":"首发","category":"单品","price":5900,"priceTax":6490,"release":"2023年3月 発送","sort":20230301,"image":"/notes/pokemon-scale-world/1000181875.webp","source":"https://www.bandai.co.jp/candy/products/2023/1000181875.html"},
+  {"id":"1000183560","name":"ポケモンスケールワールド カントー地方 マチス＆レアコイル＆エレブー","shortName":"カントー地方 マチス＆レアコイル＆エレブー","region":"关都","edition":"首发","category":"单品","price":5000,"priceTax":5500,"release":"2023年4月 発送","sort":20230401,"image":"/notes/pokemon-scale-world/1000183560.webp","source":"https://www.bandai.co.jp/candy/products/2023/1000183560.html"},
+  {"id":"1000186981","name":"ポケモンスケールワールド カントー地方 エリカ＆クサイハナ＆ラフレシア","shortName":"カントー地方 エリカ＆クサイハナ＆ラフレシア","region":"关都","edition":"首发","category":"单品","price":5500,"priceTax":6050,"release":"2023年6月 発送","sort":20230601,"image":"/notes/pokemon-scale-world/1000186981.webp","source":"https://www.bandai.co.jp/candy/products/2023/1000186981.html"},
+  {"id":"1000188437","name":"ポケモンスケールワールド カントー地方 ワタル＆カイリュー【再受注】","shortName":"カントー地方 ワタル＆カイリュー【再受注】","region":"关都","edition":"再版","category":"单品","price":5200,"priceTax":5720,"release":"2023年7月 発送","sort":20230701,"image":"/notes/pokemon-scale-world/1000188437.webp","source":"https://www.bandai.co.jp/candy/products/2023/1000188437.html","originalRelease":"2020年7月 発送"},
+  {"id":"1000188439","name":"ポケモンスケールワールド カントー地方 レッド＆カビゴン＆ポケモンの笛【再受注】","shortName":"カントー地方 レッド＆カビゴン＆ポケモンの笛【再受注】","region":"关都","edition":"再版","category":"单品","price":5200,"priceTax":5720,"release":"2023年7月 発送","sort":20230701,"image":"/notes/pokemon-scale-world/1000188439.webp","source":"https://www.bandai.co.jp/candy/products/2023/1000188439.html","originalRelease":"2020年8月 発送"},
+  {"id":"1000190170","name":"ポケモンスケールワールド カントー地方 キョウ＆ゴルバット＆マタドガス","shortName":"カントー地方 キョウ＆ゴルバット＆マタドガス","region":"关都","edition":"首发","category":"单品","price":5800,"priceTax":6380,"release":"2023年8月 発送","sort":20230801,"image":"/notes/pokemon-scale-world/1000190170.webp","source":"https://www.bandai.co.jp/candy/products/2023/1000190170.html"},
+  {"id":"1000193605","name":"ポケモンスケールワールド カントー地方 ナツメ＆ユンゲラー＆バリヤード","shortName":"カントー地方 ナツメ＆ユンゲラー＆バリヤード","region":"关都","edition":"首发","category":"单品","price":5500,"priceTax":6050,"release":"2023年9月 発送","sort":20230901,"image":"/notes/pokemon-scale-world/1000193605.webp","source":"https://www.bandai.co.jp/candy/products/2023/1000193605.html"},
+  {"id":"1000194361","name":"ポケモンスケールワールド ジョウト地方 オーダイル","shortName":"ジョウト地方 オーダイル","region":"城都","edition":"首发","category":"单品","price":4600,"priceTax":5060,"release":"2023年11月 発送","sort":20231101,"image":"/notes/pokemon-scale-world/1000194361.webp","source":"https://www.bandai.co.jp/candy/products/2023/1000194361.html"},
+  {"id":"1000194366","name":"ポケモンスケールワールド ジョウト地方 メガニウム","shortName":"ジョウト地方 メガニウム","region":"城都","edition":"首发","category":"单品","price":3500,"priceTax":3850,"release":"2023年11月 発送","sort":20231101,"image":"/notes/pokemon-scale-world/1000194366.webp","source":"https://www.bandai.co.jp/candy/products/2023/1000194366.html"},
+  {"id":"1000194369","name":"ポケモンスケールワールド ジョウト地方セット","shortName":"ジョウト地方セット","region":"城都","edition":"首发","category":"整套","price":4400,"priceTax":4840,"release":"2023年11月 発送","sort":20231101,"image":"/notes/pokemon-scale-world/1000194369.webp","source":"https://www.bandai.co.jp/candy/products/2023/1000194369.html"},
+  {"id":"1000197175","name":"ポケモンスケールワールド ジョウト地方 マツバ＆ムウマ＆セレビィ【再受注】","shortName":"ジョウト地方 マツバ＆ムウマ＆セレビィ【再受注】","region":"城都","edition":"再版","category":"单品","price":4400,"priceTax":4840,"release":"2023年12月 発送","sort":20231201,"image":"/notes/pokemon-scale-world/1000197175.webp","source":"https://www.bandai.co.jp/candy/products/2023/1000197175.html","originalRelease":"2020年5月 発送"},
+  {"id":"4570117910401000","name":"ポケモンスケールワールド パルデア地方","shortName":"パルデア地方","region":"帕底亚","edition":"首发","category":"单包","price":550,"priceTax":605,"release":"2023年12月25日 発売","sort":20231225,"image":"/notes/pokemon-scale-world/4570117910401000.webp","source":"https://www.bandai.co.jp/candy/products/2023/4570117910401000.html"},
+  {"id":"4570117910418000","name":"ポケモンスケールワールド パルデア地方セット","shortName":"パルデア地方セット","region":"帕底亚","edition":"首发","category":"整套","price":3300,"priceTax":3630,"release":"2023年12月25日 発売","sort":20231225,"image":"/notes/pokemon-scale-world/4570117910418000.webp","source":"https://www.bandai.co.jp/candy/products/2023/4570117910418000.html"},
+  {"id":"1000197178","name":"ポケモンスケールワールド パルデア地方 ネモ＆ラウドボーン＆パーモット","shortName":"パルデア地方 ネモ＆ラウドボーン＆パーモット","region":"帕底亚","edition":"首发","category":"单品","price":5800,"priceTax":6380,"release":"2024年1月 発送","sort":20240101,"image":"/notes/pokemon-scale-world/1000197178.webp","source":"https://www.bandai.co.jp/candy/products/2024/1000197178.html"},
+  {"id":"1000198211","name":"ポケモンスケールワールド ガラル地方 ダンデ＆ドラパルト【再受注】","shortName":"ガラル地方 ダンデ＆ドラパルト【再受注】","region":"伽勒尔","edition":"再版","category":"单品","price":5500,"priceTax":6050,"release":"2024年1月 発送","sort":20240101,"image":"/notes/pokemon-scale-world/1000198211.webp","source":"https://www.bandai.co.jp/candy/products/2024/1000198211.html","originalRelease":"2021年4月 発送"},
+  {"id":"1000199305","name":"ポケモンスケールワールド パルデア地方 ナンジャモ＆ハラバリー","shortName":"パルデア地方 ナンジャモ＆ハラバリー","region":"帕底亚","edition":"首发","category":"单品","price":5500,"priceTax":6050,"release":"2024年1月 発送","sort":20240101,"image":"/notes/pokemon-scale-world/1000199305.webp","source":"https://www.bandai.co.jp/candy/products/2024/1000199305.html"},
+  {"id":"1000198212","name":"ポケモンスケールワールド ガラル地方 オニオン＆サニゴーン＆ミミッキュ","shortName":"ガラル地方 オニオン＆サニゴーン＆ミミッキュ","region":"伽勒尔","edition":"首发","category":"单品","price":3800,"priceTax":4180,"release":"2024年2月 発送","sort":20240201,"image":"/notes/pokemon-scale-world/1000198212.webp","source":"https://www.bandai.co.jp/candy/products/2024/1000198212.html"},
+  {"id":"1000198215","name":"ポケモンスケールワールド ガラル地方 ネズ＆タチフサグマ","shortName":"ガラル地方 ネズ＆タチフサグマ","region":"伽勒尔","edition":"首发","category":"单品","price":4800,"priceTax":5280,"release":"2024年2月 発送","sort":20240201,"image":"/notes/pokemon-scale-world/1000198215.webp","source":"https://www.bandai.co.jp/candy/products/2024/1000198215.html"},
+  {"id":"1000200710","name":"ポケモンスケールワールド パルデア地方 ペパー＆マフィティフ＆パルシェン","shortName":"パルデア地方 ペパー＆マフィティフ＆パルシェン","region":"帕底亚","edition":"首发","category":"单品","price":6000,"priceTax":6600,"release":"2024年2月 発送","sort":20240201,"image":"/notes/pokemon-scale-world/1000200710.webp","source":"https://www.bandai.co.jp/candy/products/2024/1000200710.html"},
+  {"id":"1000202708","name":"ポケモンスケールワールド カントー地方 カツラ＆ギャロップ＆ブーバー","shortName":"カントー地方 カツラ＆ギャロップ＆ブーバー","region":"关都","edition":"首发","category":"单品","price":6800,"priceTax":7480,"release":"2024年3月 発送","sort":20240301,"image":"/notes/pokemon-scale-world/1000202708.webp","source":"https://www.bandai.co.jp/candy/products/2024/1000202708.html"},
+  {"id":"1000204636","name":"ポケモンスケールワールド パルデア地方 コライドン","shortName":"パルデア地方 コライドン","region":"帕底亚","edition":"首发","category":"单品","price":7200,"priceTax":7920,"release":"2024年5月 発送","sort":20240501,"image":"/notes/pokemon-scale-world/1000204636.webp","source":"https://www.bandai.co.jp/candy/products/2024/1000204636.html"},
+  {"id":"1000204637","name":"ポケモンスケールワールド パルデア地方 ミライドン","shortName":"パルデア地方 ミライドン","region":"帕底亚","edition":"首发","category":"单品","price":7200,"priceTax":7920,"release":"2024年6月 発送","sort":20240601,"image":"/notes/pokemon-scale-world/1000204637.webp","source":"https://www.bandai.co.jp/candy/products/2024/1000204637.html"},
+  {"id":"1000205812","name":"ポケモンスケールワールド ジョウト地方 コトネ＆ベイリーフ＆ネイティ＆ムチュール【再受注】","shortName":"ジョウト地方 コトネ＆ベイリーフ＆ネイティ＆ムチュール【再受注】","region":"城都","edition":"再版","category":"单品","price":4200,"priceTax":4620,"release":"2024年6月18日 発送","sort":20240618,"image":"/notes/pokemon-scale-world/1000205812.webp","source":"https://www.bandai.co.jp/candy/products/2024/1000205812.html","originalRelease":"2020年4月 発送"},
+  {"id":"1000205814","name":"ポケモンスケールワールド ジョウト地方 シルバー＆アリゲイツ＆ニューラ【再受注】","shortName":"ジョウト地方 シルバー＆アリゲイツ＆ニューラ【再受注】","region":"城都","edition":"再版","category":"单品","price":4200,"priceTax":4620,"release":"2024年6月18日 発送","sort":20240618,"image":"/notes/pokemon-scale-world/1000205814.webp","source":"https://www.bandai.co.jp/candy/products/2024/1000205814.html","originalRelease":"2020年4月 発送"},
+  {"id":"1000208833","name":"ポケモンスケールワールド パルデア地方 チリ＆ドオー","shortName":"パルデア地方 チリ＆ドオー","region":"帕底亚","edition":"首发","category":"单品","price":5000,"priceTax":5500,"release":"2024年7月 発送","sort":20240701,"image":"/notes/pokemon-scale-world/1000208833.webp","source":"https://www.bandai.co.jp/candy/products/2024/1000208833.html"},
+  {"id":"1000208832","name":"ポケモンスケールワールド ジョウト地方 ライコウ＆エンテイ＆スイクン【再受注:2024年8月発送】","shortName":"ジョウト地方 ライコウ＆エンテイ＆スイクン【再受注:2024年8月発送】","region":"城都","edition":"再版","category":"单品","price":12000,"priceTax":13200,"release":"2024年8月 発送","sort":20240801,"image":"/notes/pokemon-scale-world/1000208832.webp","source":"https://www.bandai.co.jp/candy/products/2024/1000208832.html","originalRelease":"2020年6月 発送"},
+  {"id":"4570117914140000","name":"ポケモンスケールワールド パルデア地方2セット","shortName":"パルデア地方2セット","region":"帕底亚","edition":"首发","category":"整套","price":3300,"priceTax":3630,"release":"2024年9月16日 発売","sort":20240916,"image":"/notes/pokemon-scale-world/4570117914140000.webp","source":"https://www.bandai.co.jp/candy/products/2024/4570117914140000.html"},
+  {"id":"4570117914157000","name":"ポケモンスケールワールド パルデア地方2","shortName":"パルデア地方2","region":"帕底亚","edition":"首发","category":"单包","price":550,"priceTax":605,"release":"2024年9月16日 発売","sort":20240916,"image":"/notes/pokemon-scale-world/4570117914157000.webp","source":"https://www.bandai.co.jp/candy/products/2024/4570117914157000.html"},
+  {"id":"1000212788","name":"ポケモンスケールワールド パルデア地方 ボタン＆ニンフィア","shortName":"パルデア地方 ボタン＆ニンフィア","region":"帕底亚","edition":"首发","category":"单品","price":4800,"priceTax":5280,"release":"2024年10月 発送","sort":20241001,"image":"/notes/pokemon-scale-world/1000212788.webp","source":"https://www.bandai.co.jp/candy/products/2024/1000212788.html"},
+  {"id":"1000212791","name":"ポケモンスケールワールド パルデア地方 イーブイ進化セット","shortName":"パルデア地方 イーブイ進化セット","region":"帕底亚","edition":"首发","category":"整套","price":5000,"priceTax":5500,"release":"2024年10月 発送","sort":20241001,"image":"/notes/pokemon-scale-world/1000212791.webp","source":"https://www.bandai.co.jp/candy/products/2024/1000212791.html"},
+  {"id":"1000218085","name":"ポケモンスケールワールド ジョウト地方 ツクシ&amp;ハッサム","shortName":"ジョウト地方 ツクシ&amp;ハッサム","region":"城都","edition":"首发","category":"单品","price":5000,"priceTax":5500,"release":"2025年1月 発送","sort":20250101,"image":"/notes/pokemon-scale-world/1000218085.webp","source":"https://www.bandai.co.jp/candy/products/2025/1000218085.html"},
+  {"id":"4570117917943000","name":"ポケモンスケールワールド ジョウト地方2","shortName":"ジョウト地方2","region":"城都","edition":"首发","category":"单包","price":680,"priceTax":748,"release":"2025年1月27日 発売","sort":20250127,"image":"/notes/pokemon-scale-world/4570117917943000.webp","source":"https://www.bandai.co.jp/candy/products/2025/4570117917943000.html"},
+  {"id":"4570117917950000","name":"ポケモンスケールワールド ジョウト地方2セット","shortName":"ジョウト地方2セット","region":"城都","edition":"首发","category":"整套","price":4080,"priceTax":4488,"release":"2025年1月27日 発売","sort":20250127,"image":"/notes/pokemon-scale-world/4570117917950000.webp","source":"https://www.bandai.co.jp/candy/products/2025/4570117917950000.html"},
+  {"id":"1000223854","name":"【定番単品販売】17 ポケモンスケールワールド ジョウト地方 メガニウム","shortName":"定番 17 · ジョウト地方 メガニウム","region":"城都","edition":"定番复售","category":"单品","price":3500,"priceTax":3850,"release":"2025年1月31日 発送","sort":20250131,"image":"/notes/pokemon-scale-world/1000223854.webp","source":"https://www.bandai.co.jp/candy/products/2025/1000223854.html"},
+  {"id":"1000223856","name":"【定番単品販売】18 ポケモンスケールワールド ジョウト地方 オーダイル","shortName":"定番 18 · ジョウト地方 オーダイル","region":"城都","edition":"定番复售","category":"单品","price":4600,"priceTax":5060,"release":"2025年1月31日 発送","sort":20250131,"image":"/notes/pokemon-scale-world/1000223856.webp","source":"https://www.bandai.co.jp/candy/products/2025/1000223856.html"},
+  {"id":"1000223858","name":"【定番単品販売】01 ポケモンスケールワールド カントー地方 ヒトカゲ＆ゼニガメ＆フシギダネ","shortName":"定番 01 · カントー地方 ヒトカゲ＆ゼニガメ＆フシギダネ","region":"关都","edition":"定番复售","category":"单包","price":680,"priceTax":748,"release":"2025年1月31日 発送","sort":20250131,"image":"/notes/pokemon-scale-world/1000223858.webp","source":"https://www.bandai.co.jp/candy/products/2025/1000223858.html"},
+  {"id":"1000223859","name":"【定番単品販売】02 ポケモンスケールワールド カントー地方 ピカチュウ＆リザード","shortName":"定番 02 · カントー地方 ピカチュウ＆リザード","region":"关都","edition":"定番复售","category":"单包","price":680,"priceTax":748,"release":"2025年1月31日 発送","sort":20250131,"image":"/notes/pokemon-scale-world/1000223859.webp","source":"https://www.bandai.co.jp/candy/products/2025/1000223859.html"},
+  {"id":"1000223861","name":"【定番単品販売】03 ポケモンスケールワールド カントー地方 イーブイ＆カメール","shortName":"定番 03 · カントー地方 イーブイ＆カメール","region":"关都","edition":"定番复售","category":"单包","price":680,"priceTax":748,"release":"2025年1月31日 発送","sort":20250131,"image":"/notes/pokemon-scale-world/1000223861.webp","source":"https://www.bandai.co.jp/candy/products/2025/1000223861.html"},
+  {"id":"1000223865","name":"【定番単品販売】04 ポケモンスケールワールド カントー地方 ミュウ＆フシギソウ","shortName":"定番 04 · カントー地方 ミュウ＆フシギソウ","region":"关都","edition":"定番复售","category":"单包","price":680,"priceTax":748,"release":"2025年1月31日 発送","sort":20250131,"image":"/notes/pokemon-scale-world/1000223865.webp","source":"https://www.bandai.co.jp/candy/products/2025/1000223865.html"},
+  {"id":"1000223866","name":"【定番単品販売】05 ポケモンスケールワールド カントー地方 ミュウツー","shortName":"定番 05 · カントー地方 ミュウツー","region":"关都","edition":"定番复售","category":"单包","price":680,"priceTax":748,"release":"2025年1月31日 発送","sort":20250131,"image":"/notes/pokemon-scale-world/1000223866.webp","source":"https://www.bandai.co.jp/candy/products/2025/1000223866.html"},
+  {"id":"1000223868","name":"【定番単品販売】06 ポケモンスケールワールド カントー地方 レッド","shortName":"定番 06 · カントー地方 レッド","region":"关都","edition":"定番复售","category":"单包","price":680,"priceTax":748,"release":"2025年1月31日 発送","sort":20250131,"image":"/notes/pokemon-scale-world/1000223868.webp","source":"https://www.bandai.co.jp/candy/products/2025/1000223868.html"},
+  {"id":"1000223869","name":"【定番単品販売】11 ポケモンスケールワールド ジョウト地方 チコリータ＆エーフィ","shortName":"定番 11 · ジョウト地方 チコリータ＆エーフィ","region":"城都","edition":"定番复售","category":"单包","price":680,"priceTax":748,"release":"2025年1月31日 発送","sort":20250131,"image":"/notes/pokemon-scale-world/1000223869.webp","source":"https://www.bandai.co.jp/candy/products/2025/1000223869.html"},
+  {"id":"1000223870","name":"【定番単品販売】12 ポケモンスケールワールド ジョウト地方 ヒノアラシ＆マグマラシ","shortName":"定番 12 · ジョウト地方 ヒノアラシ＆マグマラシ","region":"城都","edition":"定番复售","category":"单包","price":680,"priceTax":748,"release":"2025年1月31日 発送","sort":20250131,"image":"/notes/pokemon-scale-world/1000223870.webp","source":"https://www.bandai.co.jp/candy/products/2025/1000223870.html"},
+  {"id":"1000223871","name":"【定番単品販売】13 ポケモンスケールワールド ジョウト地方 ワニノコ＆ブラッキー","shortName":"定番 13 · ジョウト地方 ワニノコ＆ブラッキー","region":"城都","edition":"定番复售","category":"单包","price":680,"priceTax":748,"release":"2025年1月31日 発送","sort":20250131,"image":"/notes/pokemon-scale-world/1000223871.webp","source":"https://www.bandai.co.jp/candy/products/2025/1000223871.html"},
+  {"id":"1000223872","name":"【定番単品販売】14 ポケモンスケールワールド ジョウト地方 アンノーン＆ソーナンス","shortName":"定番 14 · ジョウト地方 アンノーン＆ソーナンス","region":"城都","edition":"定番复售","category":"单包","price":680,"priceTax":748,"release":"2025年1月31日 発送","sort":20250131,"image":"/notes/pokemon-scale-world/1000223872.webp","source":"https://www.bandai.co.jp/candy/products/2025/1000223872.html"},
+  {"id":"1000223873","name":"【定番単品販売】10 ポケモンスケールワールド ジョウト地方 ピチュー＆トゲピー＆エイパム","shortName":"定番 10 · ジョウト地方 ピチュー＆トゲピー＆エイパム","region":"城都","edition":"定番复售","category":"单包","price":680,"priceTax":748,"release":"2025年1月31日 発送","sort":20250131,"image":"/notes/pokemon-scale-world/1000223873.webp","source":"https://www.bandai.co.jp/candy/products/2025/1000223873.html"},
+  {"id":"1000223874","name":"【定番単品販売】15 ポケモンスケールワールド ジョウト地方 バクフーン","shortName":"定番 15 · ジョウト地方 バクフーン","region":"城都","edition":"定番复售","category":"单包","price":680,"priceTax":748,"release":"2025年1月31日 発送","sort":20250131,"image":"/notes/pokemon-scale-world/1000223874.webp","source":"https://www.bandai.co.jp/candy/products/2025/1000223874.html"},
+  {"id":"1000223876","name":"【定番単品販売】16 ポケモンスケールワールド ジョウト地方 ヒビキ","shortName":"定番 16 · ジョウト地方 ヒビキ","region":"城都","edition":"定番复售","category":"单包","price":680,"priceTax":748,"release":"2025年1月31日 発送","sort":20250131,"image":"/notes/pokemon-scale-world/1000223876.webp","source":"https://www.bandai.co.jp/candy/products/2025/1000223876.html"},
+  {"id":"1000223878","name":"【定番単品販売】07 ポケモンスケールワールド カントー地方 フシギバナ","shortName":"定番 07 · カントー地方 フシギバナ","region":"关都","edition":"定番复售","category":"单品","price":4800,"priceTax":5280,"release":"2025年1月31日 発送","sort":20250131,"image":"/notes/pokemon-scale-world/1000223878.webp","source":"https://www.bandai.co.jp/candy/products/2025/1000223878.html"},
+  {"id":"1000223880","name":"【定番単品販売】08 ポケモンスケールワールド カントー地方 リザードン","shortName":"定番 08 · カントー地方 リザードン","region":"关都","edition":"定番复售","category":"单品","price":3200,"priceTax":3520,"release":"2025年1月31日 発送","sort":20250131,"image":"/notes/pokemon-scale-world/1000223880.webp","source":"https://www.bandai.co.jp/candy/products/2025/1000223880.html"},
+  {"id":"1000223881","name":"【定番単品販売】09 ポケモンスケールワールド カントー地方 カメックス","shortName":"定番 09 · カントー地方 カメックス","region":"关都","edition":"定番复售","category":"单品","price":3600,"priceTax":3960,"release":"2025年1月31日 発送","sort":20250131,"image":"/notes/pokemon-scale-world/1000223881.webp","source":"https://www.bandai.co.jp/candy/products/2025/1000223881.html"},
+  {"id":"1000218914","name":"ポケモンスケールワールド ジョウト地方 ミカン&amp;ハガネール","shortName":"ジョウト地方 ミカン&amp;ハガネール","region":"城都","edition":"首发","category":"单品","price":7200,"priceTax":7920,"release":"2025年2月 発送","sort":20250201,"image":"/notes/pokemon-scale-world/1000218914.webp","source":"https://www.bandai.co.jp/candy/products/2025/1000218914.html"},
+  {"id":"1000218916","name":"ポケモンスケールワールド ジョウト地方 アカネ&amp;ミルタンク","shortName":"ジョウト地方 アカネ&amp;ミルタンク","region":"城都","edition":"首发","category":"单品","price":4800,"priceTax":5280,"release":"2025年3月 発送","sort":20250301,"image":"/notes/pokemon-scale-world/1000218916.webp","source":"https://www.bandai.co.jp/candy/products/2025/1000218916.html"},
+  {"id":"1000221889","name":"ポケモンスケールワールド ジョウト地方 ルギア","shortName":"ジョウト地方 ルギア","region":"城都","edition":"首发","category":"单品","price":13000,"priceTax":14300,"release":"2025年5月 発送","sort":20250501,"image":"/notes/pokemon-scale-world/1000221889.webp","source":"https://www.bandai.co.jp/candy/products/2025/1000221889.html"},
+  {"id":"1000221328","name":"ポケモンスケールワールド ジョウト地方 ホウオウ","shortName":"ジョウト地方 ホウオウ","region":"城都","edition":"首发","category":"单品","price":13000,"priceTax":14300,"release":"2025年6月 発送","sort":20250601,"image":"/notes/pokemon-scale-world/1000221328.webp","source":"https://www.bandai.co.jp/candy/products/2025/1000221328.html"},
+  {"id":"1000228362","name":"ポケモンスケールワールド ヒスイ地方 テル＆バクフーン（ヒスイのすがた）＆ダイケンキ（ヒスイのすがた）＆ジュナイパー（ヒスイのすがた）","shortName":"ヒスイ地方 テル＆バクフーン（ヒスイのすがた）＆ダイケンキ（ヒスイのすがた）＆ジュナイパー（ヒスイのすがた）","region":"洗翠","edition":"首发","category":"单品","price":8900,"priceTax":9790,"release":"2025年9月 発送","sort":20250901,"image":"/notes/pokemon-scale-world/1000228362.webp","source":"https://www.bandai.co.jp/candy/products/2025/1000228362.html"},
+  {"id":"4570117921711000","name":"ポケモンスケールワールド ヒスイ地方","shortName":"ヒスイ地方","region":"洗翠","edition":"首发","category":"单包","price":680,"priceTax":748,"release":"2025年9月29日 発売","sort":20250929,"image":"/notes/pokemon-scale-world/4570117921711000.webp","source":"https://www.bandai.co.jp/candy/products/2025/4570117921711000.html"},
+  {"id":"4570117924781000","name":"ポケモンスケールワールド ヒスイ地方セット","shortName":"ヒスイ地方セット","region":"洗翠","edition":"首发","category":"整套","price":4080,"priceTax":4488,"release":"2025年9月29日 発売","sort":20250929,"image":"/notes/pokemon-scale-world/4570117924781000.webp","source":"https://www.bandai.co.jp/candy/products/2025/4570117924781000.html"},
+  {"id":"1000229822","name":"【定番単品販売】19 ポケモンスケールワールド シンオウ地方 ナエトル＆ポッチャマ＆ポッタイシ","shortName":"定番 19 · シンオウ地方 ナエトル＆ポッチャマ＆ポッタイシ","region":"神奥","edition":"定番复售","category":"单包","price":680,"priceTax":748,"release":"2025年10月 発送","sort":20251001,"image":"/notes/pokemon-scale-world/1000229822.webp","source":"https://www.bandai.co.jp/candy/products/2025/1000229822.html"},
+  {"id":"1000229824","name":"【定番単品販売】20 ポケモンスケールワールド シンオウ地方 ヒコザル＆モウカザル","shortName":"定番 20 · シンオウ地方 ヒコザル＆モウカザル","region":"神奥","edition":"定番复售","category":"单包","price":680,"priceTax":748,"release":"2025年10月 発送","sort":20251001,"image":"/notes/pokemon-scale-world/1000229824.webp","source":"https://www.bandai.co.jp/candy/products/2025/1000229824.html"},
+  {"id":"1000229826","name":"【定番単品販売】21 ポケモンスケールワールド シンオウ地方 ゴウカザル","shortName":"定番 21 · シンオウ地方 ゴウカザル","region":"神奥","edition":"定番复售","category":"单包","price":680,"priceTax":748,"release":"2025年10月 発送","sort":20251001,"image":"/notes/pokemon-scale-world/1000229826.webp","source":"https://www.bandai.co.jp/candy/products/2025/1000229826.html"},
+  {"id":"1000229828","name":"【定番単品販売】22 ポケモンスケールワールド シンオウ地方 エンペルト","shortName":"定番 22 · シンオウ地方 エンペルト","region":"神奥","edition":"定番复售","category":"单包","price":680,"priceTax":748,"release":"2025年10月 発送","sort":20251001,"image":"/notes/pokemon-scale-world/1000229828.webp","source":"https://www.bandai.co.jp/candy/products/2025/1000229828.html"},
+  {"id":"1000229829","name":"【定番単品販売】23 ポケモンスケールワールド シンオウ地方 コウキ（DPver.）","shortName":"定番 23 · シンオウ地方 コウキ（DPver.）","region":"神奥","edition":"定番复售","category":"单包","price":680,"priceTax":748,"release":"2025年10月 発送","sort":20251001,"image":"/notes/pokemon-scale-world/1000229829.webp","source":"https://www.bandai.co.jp/candy/products/2025/1000229829.html"},
+  {"id":"1000229830","name":"【定番単品販売】24 ポケモンスケールワールド シンオウ地方 ヒカリ（DPver.）","shortName":"定番 24 · シンオウ地方 ヒカリ（DPver.）","region":"神奥","edition":"定番复售","category":"单包","price":680,"priceTax":748,"release":"2025年10月 発送","sort":20251001,"image":"/notes/pokemon-scale-world/1000229830.webp","source":"https://www.bandai.co.jp/candy/products/2025/1000229830.html"},
+  {"id":"1000229832","name":"ポケモンスケールワールド シンオウ地方 ジュン＆ハヤシガメ＆ムクホーク【再受注】","shortName":"シンオウ地方 ジュン＆ハヤシガメ＆ムクホーク【再受注】","region":"神奥","edition":"再版","category":"单品","price":4300,"priceTax":4730,"release":"2025年10月 発送","sort":20251001,"image":"/notes/pokemon-scale-world/1000229832.webp","source":"https://www.bandai.co.jp/candy/products/2025/1000229832.html","originalRelease":"2022年3月 発送"},
+  {"id":"1000229833","name":"ポケモンスケールワールド シンオウ地方 ナタネ＆ドダイトス【再受注】","shortName":"シンオウ地方 ナタネ＆ドダイトス【再受注】","region":"神奥","edition":"再版","category":"单品","price":4500,"priceTax":4950,"release":"2025年10月 発送","sort":20251001,"image":"/notes/pokemon-scale-world/1000229833.webp","source":"https://www.bandai.co.jp/candy/products/2025/1000229833.html","originalRelease":"2022年2月 発送"},
+  {"id":"1000230412","name":"ポケモンスケールワールド シンオウ地方 アルセウス【再受注】","shortName":"シンオウ地方 アルセウス【再受注】","region":"神奥","edition":"再版","category":"单品","price":5500,"priceTax":6050,"release":"2025年10月 発送","sort":20251001,"image":"/notes/pokemon-scale-world/1000230412.webp","source":"https://www.bandai.co.jp/candy/products/2025/1000230412.html","originalRelease":"2022年9月 発送"},
+  {"id":"1000230416","name":"ポケモンスケールワールド ヒスイ地方 ウォロ＆ウインディ(ヒスイのすがた)","shortName":"ヒスイ地方 ウォロ＆ウインディ(ヒスイのすがた)","region":"洗翠","edition":"首发","category":"单品","price":6000,"priceTax":6600,"release":"2025年10月 発送","sort":20251001,"image":"/notes/pokemon-scale-world/1000230416.webp","source":"https://www.bandai.co.jp/candy/products/2025/1000230416.html"},
+  {"id":"1000230418","name":"ポケモンスケールワールド シンオウ地方 シロナ＆ガブリアス【再受注】","shortName":"シンオウ地方 シロナ＆ガブリアス【再受注】","region":"神奥","edition":"再版","category":"单品","price":5500,"priceTax":6050,"release":"2025年11月 発送","sort":20251101,"image":"/notes/pokemon-scale-world/1000230418.webp","source":"https://www.bandai.co.jp/candy/products/2025/1000230418.html"},
+  {"id":"1000230420","name":"ポケモンスケールワールド シンオウ地方 ロズレイド＆トリトドン（にしのうみ）＆ミカルゲ＆トゲキッス【再受注】","shortName":"シンオウ地方 ロズレイド＆トリトドン（にしのうみ）＆ミカルゲ＆トゲキッス【再受注】","region":"神奥","edition":"再版","category":"单品","price":4800,"priceTax":5280,"release":"2025年11月 発送","sort":20251101,"image":"/notes/pokemon-scale-world/1000230420.webp","source":"https://www.bandai.co.jp/candy/products/2025/1000230420.html","originalRelease":"2022年8月 発送"},
+  {"id":"1000233057","name":"ポケモンスケールワールド ヒスイ地方 カイ＆グレイシア","shortName":"ヒスイ地方 カイ＆グレイシア","region":"洗翠","edition":"首发","category":"单品","price":4500,"priceTax":4950,"release":"2025年11月 発送","sort":20251101,"image":"/notes/pokemon-scale-world/1000233057.webp","source":"https://www.bandai.co.jp/candy/products/2025/1000233057.html"},
+  {"id":"1000230417","name":"ポケモンスケールワールド ヒスイ地方 セキ＆リーフィア","shortName":"ヒスイ地方 セキ＆リーフィア","region":"洗翠","edition":"首发","category":"单品","price":4500,"priceTax":4950,"release":"2025年12月 発送","sort":20251201,"image":"/notes/pokemon-scale-world/1000230417.webp","source":"https://www.bandai.co.jp/candy/products/2025/1000230417.html"},
+  {"id":"4570117923234000","name":"ポケモンスケールワールド カロス地方セット","shortName":"カロス地方セット","region":"卡洛斯","edition":"首发","category":"整套","price":4080,"priceTax":4488,"release":"2025年12月22日 発売","sort":20251222,"image":"/notes/pokemon-scale-world/4570117923234000.webp","source":"https://www.bandai.co.jp/candy/products/2025/4570117923234000.html"},
+  {"id":"4570117923258000","name":"ポケモンスケールワールド カロス地方","shortName":"カロス地方","region":"卡洛斯","edition":"首发","category":"单包","price":680,"priceTax":748,"release":"2025年12月22日 発売","sort":20251222,"image":"/notes/pokemon-scale-world/4570117923258000.webp","source":"https://www.bandai.co.jp/candy/products/2025/4570117923258000.html"},
+  {"id":"1000234996","name":"ポケモンスケールワールド カロス地方 カルム＆ブリガロン＆マフォクシー","shortName":"カロス地方 カルム＆ブリガロン＆マフォクシー","region":"卡洛斯","edition":"首发","category":"单品","price":6000,"priceTax":6600,"release":"2026年1月23日 発送","sort":20260123,"image":"/notes/pokemon-scale-world/1000234996.webp","source":"https://www.bandai.co.jp/candy/products/2026/1000234996.html"},
+  {"id":"1000237694","name":"ポケモンスケールワールド カロス地方 コルニ＆メガルカリオ","shortName":"カロス地方 コルニ＆メガルカリオ","region":"卡洛斯","edition":"首发","category":"单品","price":5800,"priceTax":6380,"release":"2026年2月 発送","sort":20260201,"image":"/notes/pokemon-scale-world/1000237694.webp","source":"https://www.bandai.co.jp/candy/products/2026/1000237694.html"},
+  {"id":"1000237693","name":"ポケモンスケールワールド カロス地方 メガギャラドス","shortName":"カロス地方 メガギャラドス","region":"卡洛斯","edition":"首发","category":"单品","price":7900,"priceTax":8690,"release":"2026年3月 発送","sort":20260301,"image":"/notes/pokemon-scale-world/1000237693.webp","source":"https://www.bandai.co.jp/candy/products/2026/1000237693.html"},
+  {"id":"1000242595","name":"ポケモンスケールワールド カロス地方 フラダリ＆カエンジシ","shortName":"カロス地方 フラダリ＆カエンジシ","region":"卡洛斯","edition":"首发","category":"单品","price":6000,"priceTax":6600,"release":"2026年5月 発送","sort":20260501,"image":"/notes/pokemon-scale-world/1000242595.webp","source":"https://www.bandai.co.jp/candy/products/2026/1000242595.html"},
+  {"id":"1000248354","name":"ポケモンスケールワールド カロス地方 プラターヌ＆メガリザードンX","shortName":"カロス地方 プラターヌ＆メガリザードンX","region":"卡洛斯","edition":"首发","category":"单品","price":6300,"priceTax":6930,"release":"2026年7月 発送","sort":20260701,"image":"/notes/pokemon-scale-world/1000248354.webp","source":"https://www.bandai.co.jp/candy/products/2026/1000248354.html"},
+  {"id":"1000251043","name":"ポケモンスケールワールド シンオウ地方 デンジ＆エレキブル","shortName":"シンオウ地方 デンジ＆エレキブル","region":"神奥","edition":"首发","category":"单品","price":5500,"priceTax":6050,"release":"2026年9月 発送","sort":20260901,"image":"/notes/pokemon-scale-world/1000251043.webp","source":"https://www.bandai.co.jp/candy/products/2026/1000251043.html"},
+  {"id":"1000253253","name":"ポケモンスケールワールド シンオウ地方 ディアルガ","shortName":"シンオウ地方 ディアルガ","region":"神奥","edition":"首发","category":"单品","price":13000,"priceTax":14300,"release":"2026年10月 発送","sort":20261001,"image":"/notes/pokemon-scale-world/1000253253.webp","source":"https://www.bandai.co.jp/candy/products/2026/1000253253.html"},
+  {"id":"4570117928932000","name":"ポケモンスケールワールド シンオウ地方3","shortName":"シンオウ地方3","region":"神奥","edition":"首发","category":"单包","price":680,"priceTax":748,"release":"2026年10月 発売","sort":20261001,"image":"/notes/pokemon-scale-world/4570117928932000.webp","source":"https://www.bandai.co.jp/candy/products/2026/4570117928932000.html"},
+  {"id":"4570117928949000","name":"ポケモンスケールワールド シンオウ地方3セット","shortName":"シンオウ地方3セット","region":"神奥","edition":"首发","category":"整套","price":4080,"priceTax":4488,"release":"2026年10月 発売","sort":20261001,"image":"/notes/pokemon-scale-world/4570117928949000.webp","source":"https://www.bandai.co.jp/candy/products/2026/4570117928949000.html"},
+  {"id":"1000253255","name":"ポケモンスケールワールド シンオウ地方 パルキア","shortName":"シンオウ地方 パルキア","region":"神奥","edition":"首发","category":"单品","price":13000,"priceTax":14300,"release":"2026年11月 発送","sort":20261101,"image":"/notes/pokemon-scale-world/1000253255.webp","source":"https://www.bandai.co.jp/candy/products/2026/1000253255.html"},
+  {"id":"1000256459","name":"【定番単品販売】25 ポケモンスケールワールド ホウエン地方 キモリ＆ジュプトル","shortName":"定番 25 · ホウエン地方 キモリ＆ジュプトル","region":"丰缘","edition":"定番复售","category":"单包","price":680,"priceTax":748,"release":"2026年12月 発送","sort":20261201,"image":"/notes/pokemon-scale-world/1000256459.webp","source":"https://www.bandai.co.jp/candy/products/2026/1000256459.html"},
+  {"id":"1000256461","name":"【定番単品販売】26 ポケモンスケールワールド ホウエン地方 アチャモ＆ワカシャモ＆ポチエナ","shortName":"定番 26 · ホウエン地方 アチャモ＆ワカシャモ＆ポチエナ","region":"丰缘","edition":"定番复售","category":"单包","price":680,"priceTax":748,"release":"2026年12月 発送","sort":20261201,"image":"/notes/pokemon-scale-world/1000256461.webp","source":"https://www.bandai.co.jp/candy/products/2026/1000256461.html"},
+  {"id":"1000256462","name":"【定番単品販売】27 ポケモンスケールワールド ホウエン地方 ミズゴロウ＆ヌマクロー＆エネコ","shortName":"定番 27 · ホウエン地方 ミズゴロウ＆ヌマクロー＆エネコ","region":"丰缘","edition":"定番复售","category":"单包","price":680,"priceTax":748,"release":"2026年12月 発送","sort":20261201,"image":"/notes/pokemon-scale-world/1000256462.webp","source":"https://www.bandai.co.jp/candy/products/2026/1000256462.html"},
+  {"id":"1000256463","name":"【定番単品販売】28 ポケモンスケールワールド ホウエン地方 バシャーモ","shortName":"定番 28 · ホウエン地方 バシャーモ","region":"丰缘","edition":"定番复售","category":"单包","price":680,"priceTax":748,"release":"2026年12月 発送","sort":20261201,"image":"/notes/pokemon-scale-world/1000256463.webp","source":"https://www.bandai.co.jp/candy/products/2026/1000256463.html"},
+  {"id":"1000256464","name":"【定番単品販売】29 ポケモンスケールワールド ホウエン地方 ハルカ(ORASver.)","shortName":"定番 29 · ホウエン地方 ハルカ(ORASver.)","region":"丰缘","edition":"定番复售","category":"单包","price":680,"priceTax":748,"release":"2026年12月 発送","sort":20261201,"image":"/notes/pokemon-scale-world/1000256464.webp","source":"https://www.bandai.co.jp/candy/products/2026/1000256464.html"},
+  {"id":"1000256465","name":"【定番単品販売】30 ポケモンスケールワールド ホウエン地方 ユウキ(ORASver.)","shortName":"定番 30 · ホウエン地方 ユウキ(ORASver.)","region":"丰缘","edition":"定番复售","category":"单包","price":680,"priceTax":748,"release":"2026年12月 発送","sort":20261201,"image":"/notes/pokemon-scale-world/1000256465.webp","source":"https://www.bandai.co.jp/candy/products/2026/1000256465.html"},
+  {"id":"1000256466","name":"ポケモンスケールワールド ホウエン地方 ジュカイン【再受注】","shortName":"ホウエン地方 ジュカイン【再受注】","region":"丰缘","edition":"再版","category":"单品","price":4000,"priceTax":4400,"release":"2026年12月 発送","sort":20261201,"image":"/notes/pokemon-scale-world/1000256466.webp","source":"https://www.bandai.co.jp/candy/products/2026/1000256466.html","originalRelease":"2021年5月 発送"},
+  {"id":"1000256468","name":"ポケモンスケールワールド ホウエン地方 ラグラージ【再受注】","shortName":"ホウエン地方 ラグラージ【再受注】","region":"丰缘","edition":"再版","category":"单品","price":4000,"priceTax":4400,"release":"2026年12月 発送","sort":20261201,"image":"/notes/pokemon-scale-world/1000256468.webp","source":"https://www.bandai.co.jp/candy/products/2026/1000256468.html","originalRelease":"2021年5月 発送"},
+  {"id":"1000256579","name":"ポケモンスケールワールド ミアレシティ メガカイリュー","shortName":"ミアレシティ メガカイリュー","region":"卡洛斯","edition":"首发","category":"单品","price":5000,"priceTax":5500,"release":"2026年12月 発送","sort":20261201,"image":"/notes/pokemon-scale-world/1000256579.webp","source":"https://www.bandai.co.jp/candy/products/2026/1000256579.html"},
+  {"id":"1000256581","name":"ポケモンスケールワールド ホウエン地方 グラードン【再受注】","shortName":"ホウエン地方 グラードン【再受注】","region":"丰缘","edition":"再版","category":"单品","price":9500,"priceTax":10450,"release":"2027年1月 発送","sort":20270101,"image":"/notes/pokemon-scale-world/1000256581.webp","source":"https://www.bandai.co.jp/candy/products/2027/1000256581.html","originalRelease":"2021年10月 発送"},
+  {"id":"1000256584","name":"ポケモンスケールワールド ホウエン地方 カイオーガ【再受注】","shortName":"ホウエン地方 カイオーガ【再受注】","region":"丰缘","edition":"再版","category":"单品","price":7500,"priceTax":8250,"release":"2027年2月 発送","sort":20270201,"image":"/notes/pokemon-scale-world/1000256584.webp","source":"https://www.bandai.co.jp/candy/products/2027/1000256584.html","originalRelease":"2021年11月 発送"},
+  {"id":"1000256585","name":"ポケモンスケールワールド ホウエン地方 レックウザ【再受注】","shortName":"ホウエン地方 レックウザ【再受注】","region":"丰缘","edition":"再版","category":"单品","price":5500,"priceTax":6050,"release":"2027年3月 発送","sort":20270301,"image":"/notes/pokemon-scale-world/1000256585.webp","source":"https://www.bandai.co.jp/candy/products/2027/1000256585.html","originalRelease":"2021年11月 発送"},
+];
+</code></pre></details>
+  <footer>© 2026 PL-HOME · 本地内容备份，不作为网站公开页面。</footer>
+</main></body></html>

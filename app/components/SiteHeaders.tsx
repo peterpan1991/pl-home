@@ -7,10 +7,18 @@ type HeaderTheme = "day" | "night";
 
 const mainNavItems = [
   { index: "00", label: "首页", href: "/" },
-  { index: "01", label: "漫画", href: "/comics" },
-  { index: "02", label: "笔记", href: "/notes" },
-  { index: "03", label: "工具", href: "/tools/manga-translator" },
-  { index: "04", label: "作品", href: "/works" },
+  { index: "01", label: "项目", href: "/projects" },
+  { index: "02", label: "手绘", href: "/drawing" },
+  {
+    index: "03",
+    label: "AIGC",
+    href: "/aigc/ai-art",
+    children: [
+      { label: "AI绘画", href: "/aigc/ai-art" },
+      { label: "宝可梦卡牌", href: "/aigc/pokemon-cards" },
+    ],
+  },
+  { index: "04", label: "技术栈", href: "/tech-stack" },
   { index: "05", label: "关于我", href: "/about" },
 ] as const;
 
@@ -25,18 +33,39 @@ function HeaderBrand({ subtitle, onActivate }: { subtitle: string; onActivate?: 
   return onActivate ? (
     <button className="shared-header-brand" type="button" onClick={onActivate} aria-label="返回首页场景">{content}</button>
   ) : (
-    <a className="shared-header-brand" href={sitePath("/")} aria-label="返回奇想书桌首页">{content}</a>
+    <a className="shared-header-brand" href={sitePath("/")} aria-label="返回PL-HOME首页">{content}</a>
   );
 }
 
 function MainNavigation({ activeHref }: { activeHref: string }) {
   return (
     <nav className="shared-main-nav" aria-label="网站主菜单">
-      {mainNavItems.map((item) => (
-        <a key={item.label} href={sitePath(item.href)} className={item.href === activeHref ? "is-active" : ""} aria-current={item.href === activeHref ? "page" : undefined}>
-          <span>{item.index}</span>{item.label}
-        </a>
-      ))}
+      {mainNavItems.map((item) => {
+        const children = "children" in item ? item.children : undefined;
+        const isActive = item.href === activeHref || Boolean(children?.some((child) => child.href === activeHref));
+        if (!children) {
+          return (
+            <a key={item.label} href={sitePath(item.href)} className={isActive ? "is-active" : ""} aria-current={isActive ? "page" : undefined}>
+              <span>{item.index}</span>{item.label}
+            </a>
+          );
+        }
+
+        return (
+          <details className={`shared-nav-group${isActive ? " is-active" : ""}`} key={item.label}>
+            <summary>
+              <span>{item.index}</span>{item.label}<i aria-hidden="true">⌄</i>
+            </summary>
+            <div className="shared-nav-dropdown">
+              {children.map((child) => (
+                <a key={child.label} href={sitePath(child.href)} className={child.href === activeHref ? "is-current" : ""} aria-current={child.href === activeHref ? "page" : undefined}>
+                  {child.label}
+                </a>
+              ))}
+            </div>
+          </details>
+        );
+      })}
     </nav>
   );
 }

@@ -1,0 +1,105 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>宝可梦动态卡牌｜PL-HOME 页面存档</title>
+  <style>
+    :root { color-scheme: dark; --ink:#f8ead7; --muted:#bba895; --panel:#17191f; --line:#3b3d45; --accent:#e4714d; }
+    * { box-sizing:border-box; }
+    body { margin:0; background:#111319; color:var(--ink); font-family:Inter,"PingFang SC","Microsoft YaHei",sans-serif; }
+    header { position:sticky; top:0; z-index:2; display:flex; align-items:end; justify-content:space-between; gap:24px; padding:28px 5vw 20px; background:rgba(17,19,25,.92); backdrop-filter:blur(16px); border-bottom:1px solid var(--line); }
+    h1 { margin:4px 0 0; font-size:clamp(28px,4vw,54px); }
+    header p, header small { margin:0; color:var(--muted); }
+    main { padding:32px 5vw 72px; }
+    .grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(150px,1fr)); gap:20px; }
+    .card { appearance:none; padding:0; color:inherit; text-align:left; border:1px solid var(--line); border-radius:22px; overflow:hidden; background:var(--panel); cursor:pointer; transition:transform .2s,border-color .2s; }
+    .card:hover { transform:translateY(-5px); border-color:var(--accent); }
+    .card img { display:block; width:100%; aspect-ratio:63/88; object-fit:cover; background:#0b0c10; }
+    .card span { display:block; padding:12px 14px 15px; font-size:13px; }
+    .card small { display:block; margin-bottom:4px; color:var(--accent); letter-spacing:.12em; }
+    dialog { width:min(1040px,94vw); max-height:94vh; padding:20px; border:1px solid #4b4e58; border-radius:28px; color:var(--ink); background:#15171d; box-shadow:0 30px 100px #000b; }
+    dialog::backdrop { background:#090a0edb; }
+    .modal-head { display:flex; align-items:center; justify-content:space-between; gap:16px; margin-bottom:14px; }
+    .modal-head h2 { margin:0; font-size:clamp(20px,3vw,34px); }
+    .close,.switch { appearance:none; border:1px solid #50525b; color:var(--ink); background:#24272e; cursor:pointer; border-radius:999px; }
+    .close { width:44px; height:44px; font-size:28px; }
+    .player { display:grid; grid-template-columns:52px minmax(0,1fr) 52px; align-items:center; gap:16px; }
+    .switch { width:52px; height:52px; font-size:24px; }
+    .media { position:relative; width:min(58vh,480px); aspect-ratio:63/88; margin:auto; overflow:hidden; border-radius:18px; background:#090a0d center/contain no-repeat; }
+    .media video { display:block; width:100%; height:100%; object-fit:contain; }
+    .strip { display:flex; gap:9px; margin-top:16px; overflow:auto; padding:4px 2px 10px; }
+    .strip button { flex:0 0 56px; padding:2px; border:2px solid transparent; border-radius:10px; background:#292c34; cursor:pointer; }
+    .strip button.active { border-color:var(--accent); }
+    .strip img { display:block; width:100%; aspect-ratio:63/88; object-fit:cover; border-radius:7px; }
+    @media (max-width:640px) { .player { grid-template-columns:1fr; } .switch { position:fixed; z-index:3; top:50%; } .switch.prev { left:3vw; } .switch.next { right:3vw; } }
+  </style>
+</head>
+<body>
+  <header>
+    <div><small>PL-HOME · ARCHIVE · 2026-09-15</small><h1>宝可梦动态卡牌</h1></div>
+    <p>43 张动态视觉练习 · 点击卡牌播放</p>
+  </header>
+  <main><section class="grid" id="grid" aria-label="动态卡牌存档"></section></main>
+  <dialog id="viewer">
+    <div class="modal-head"><div><small id="count"></small><h2 id="title"></h2></div><button class="close" aria-label="关闭">×</button></div>
+    <div class="player">
+      <button class="switch prev" aria-label="上一张">←</button>
+      <div class="media" id="media"><video id="video" autoplay muted loop playsinline disablepictureinpicture></video></div>
+      <button class="switch next" aria-label="下一张">→</button>
+    </div>
+    <nav class="strip" id="strip" aria-label="选择卡牌"></nav>
+  </dialog>
+  <script>
+    const titles = [
+      "小木灵","摔角鹰人","火箭队的引梦貘人","火箭队的戴路比","球球海师","炭小侍","蓝鳄","彷徨幽灵","超级喷火龙ex","探探鼠","哥达鸭","流氓鳄","派来朵","小猫怪","电击魔兽","火箭队的催眠貘","炽焰咆哮虎","小火马","鬼斯","火箭队的超梦ex","戴欧奇希斯","小火猴","雪拉比","巨翅飞鱼","落泪兽","迷你龙","皮卡丘ex","鬼斯通","霹雳球","妙蛙草","咩利羊","火斑喵","拉鲁拉丝","火箭队的果然翁","妙蛙种子","雪童子","雷公","鬼斯通","双蛋瓦斯","阿响的熔岩蜗牛","火恐龙","阿勃梭鲁","故勒顿ex"
+    ];
+    const jpg = new Set([13,18,22]);
+    const base = "../public/pokemonCard";
+    const cards = titles.map((title,index) => {
+      const number = index + 1;
+      return { title, image:`${base}/image/${number}.${jpg.has(number)?"jpg":"png"}`, video:`${base}/video/${number}.mp4` };
+    });
+    const grid = document.querySelector("#grid");
+    const strip = document.querySelector("#strip");
+    const viewer = document.querySelector("#viewer");
+    const video = document.querySelector("#video");
+    const media = document.querySelector("#media");
+    const title = document.querySelector("#title");
+    const count = document.querySelector("#count");
+    let active = 0;
+    cards.forEach((card,index) => {
+      const button = document.createElement("button");
+      button.className = "card";
+      button.innerHTML = `<img src="${card.image}" alt=""><span><small>MOTION ${String(index+1).padStart(2,"0")}</small>${card.title}</span>`;
+      button.onclick = () => openCard(index);
+      grid.append(button);
+      const thumb = document.createElement("button");
+      thumb.innerHTML = `<img src="${card.image}" alt="${card.title}">`;
+      thumb.onclick = () => openCard(index);
+      strip.append(thumb);
+    });
+    function openCard(index) {
+      active = (index + cards.length) % cards.length;
+      const card = cards[active];
+      title.textContent = card.title;
+      count.textContent = `${String(active+1).padStart(2,"0")} / ${cards.length}`;
+      media.style.backgroundImage = `url("${card.image}")`;
+      video.poster = card.image;
+      video.src = card.video;
+      [...strip.children].forEach((item,i) => item.classList.toggle("active",i === active));
+      strip.children[active]?.scrollIntoView({ behavior:"smooth", block:"nearest", inline:"center" });
+      if (!viewer.open) viewer.showModal();
+    }
+    document.querySelector(".close").onclick = () => viewer.close();
+    document.querySelector(".prev").onclick = () => openCard(active - 1);
+    document.querySelector(".next").onclick = () => openCard(active + 1);
+    viewer.addEventListener("click", event => { if (event.target === viewer) viewer.close(); });
+    window.addEventListener("keydown", event => {
+      if (!viewer.open) return;
+      if (event.key === "ArrowLeft") openCard(active - 1);
+      if (event.key === "ArrowRight") openCard(active + 1);
+    });
+  </script>
+</body>
+</html>

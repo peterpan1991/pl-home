@@ -8,9 +8,9 @@ import type { Group } from "three";
 import type { ComponentRef } from "react";
 import { SceneHeader } from "./components/SiteHeaders";
 import { sitePath } from "./lib/sitePath";
+import { useTheme, type ThemeMode } from "./lib/useTheme";
 
-type SectionId = "home" | "about" | "comics" | "works" | "tools" | "tutorials";
-type ThemeMode = "day" | "night";
+type SectionId = "home" | "wallpapers" | "projects" | "illustrations" | "tech" | "about";
 
 type Section = {
   id: SectionId;
@@ -32,8 +32,8 @@ const sections: Section[] = [
     label: "首页",
     index: "00",
     eyebrow: "WELCOME TO MY DESK",
-    title: "一张桌子，一只猫，五个入口。",
-    description: "把复杂的房间收起来，只留下最能代表我的东西。选择一个栏目，镜头会移动到对应物件。",
+    title: "HELLO STRANGER",
+    description: "这里有我喜爱的所有东西，希望你也喜欢。",
     action: "开始逛逛",
     focus: "桌面全景",
     accent: "#d76645",
@@ -41,64 +41,64 @@ const sections: Section[] = [
     note: "镜头正在浏览整张书桌",
   },
   {
-    id: "comics",
-    label: "漫画",
+    id: "wallpapers",
+    label: "AIGC",
     index: "01",
-    eyebrow: "COMIC BOOK",
-    title: "蓝色漫画书里，放着适合慢慢读的故事。",
-    description: "翻译与整理的漫画以章节形式在线阅读，保留进度、支持沉浸模式，但不提供原文件下载。",
-    action: "打开漫画",
-    focus: "漫画书",
-    accent: "#3f8998",
-    stat: "仅在线阅读",
-    note: "镜头正在查看漫画封面",
+    eyebrow: "AIGC LAB",
+    title: "AIGC",
+    description: "生成式视觉实验：AI 绘画与宝可梦动态卡牌。",
+    action: "进入 AIGC",
+    focus: "桌面画框",
+    accent: "#c65342",
+    stat: "生成式视觉",
+    note: "镜头已移动到画框",
   },
   {
-    id: "tutorials",
-    label: "笔记",
+    id: "projects",
+    label: "项目",
     index: "02",
-    eyebrow: "OPEN NOTEBOOK",
-    title: "摊开的笔记，写着我踩过的坑。",
-    description: "教程、项目复盘与工作流会整理成可以照着完成的步骤，让后来的人少走一点弯路。",
-    action: "阅读教程",
+    eyebrow: "PROJECT ARCHIVE",
+    title: "PROJECTS",
+    description: "这里记录我做过的全栈项目、AI 应用与桌面工具。",
+    action: "查看项目",
     focus: "开放笔记本",
     accent: "#bd8538",
-    stat: "实践型教程",
+    stat: "开发实践",
     note: "镜头已聚焦笔记本",
   },
   {
-    id: "tools",
-    label: "工具",
+    id: "illustrations",
+    label: "手绘",
     index: "03",
-    eyebrow: "PENCIL CUP",
-    title: "笔筒代表那些顺手、直接的小工具。",
-    description: "这里收纳我开发的轻量工具：打开就能用，并记录它们解决了什么真实问题。",
-    action: "试用工具",
+    eyebrow: "HAND DRAWING",
+    title: "DRAWINGS",
+    description: "角色、场景与日常观察，把脑海里的小故事留在画面里。",
+    action: "浏览手绘",
     focus: "像素笔筒",
     accent: "#738353",
-    stat: "免费使用",
+    stat: "手绘作品",
     note: "镜头正在查看笔筒",
   },
   {
-    id: "works",
-    label: "作品",
+    id: "tech",
+    label: "技术栈",
     index: "04",
-    eyebrow: "FRAMED WORKS",
-    title: "画框里，收藏着每一次创作记录。",
-    description: "壁纸、插画、视觉素材和实验作品会在这里展示，并附上构思与制作过程。",
-    action: "浏览作品",
-    focus: "桌面画框",
-    accent: "#c65342",
-    stat: "插画与视觉",
-    note: "镜头已移动到画框",
+    eyebrow: "TECH STACK",
+    title: "PLAYER STATUS",
+    description: "像查看角色属性一样，了解我的 AI、全栈与工程交付能力。",
+    action: "打开属性面板",
+    focus: "漫画书",
+    accent: "#3f8998",
+    stat: "全栈 × AI",
+    note: "镜头正在查看技能书册",
   },
   {
     id: "about",
     label: "关于我",
     index: "05",
     eyebrow: "ABOUT ME",
-    title: "站在桌边的猫，就是这个网站的主人。",
-    description: "从技术栈、工作经历到创作偏好，在这里快速认识我，以及我正在寻找的合作方向。",
+    title: "ABOUT ME",
+    description: "如果你对我感兴趣，可以来这里看看。",
     action: "查看个人档案",
     focus: "站立猫咪",
     accent: "#df8256",
@@ -109,20 +109,20 @@ const sections: Section[] = [
 
 const sectionRoutes: Record<SectionId, string> = {
   home: sitePath("/"),
-  comics: sitePath("/comics"),
-  tutorials: sitePath("/notes"),
-  tools: sitePath("/tools/manga-translator"),
-  works: sitePath("/works"),
+  wallpapers: sitePath("/aigc/ai-art"),
+  projects: sitePath("/projects"),
+  illustrations: sitePath("/drawing"),
+  tech: sitePath("/tech-stack"),
   about: sitePath("/about"),
 };
 
 const cameraPresets: Record<SectionId, { position: [number, number, number]; target: [number, number, number]; zoom: number }> = {
   home: { position: [6.78, 4.35, 6.81], target: [1.08, 1.05, -0.54], zoom: 142 },
   about: { position: [2.36, 7.92, -3.66], target: [0.54, 2.15, 1.2], zoom: 296 },
-  comics: { position: [8.84, 4.35, 7.14], target: [1.62, 2.16, 0.79], zoom: 402 },
-  works: { position: [-5.88, 6.49, 6.48], target: [1.15, 2.3, 0.98], zoom: 402 },
-  tools: { position: [-4.13, 6.37, 7.48], target: [0.86, 1.99, 0.19], zoom: 402 },
-  tutorials: { position: [0.18, 10.17, 6.38], target: [0.49, 2.1, 0.71], zoom: 402 },
+  tech: { position: [8.84, 4.35, 7.14], target: [1.62, 2.16, 0.79], zoom: 402 },
+  wallpapers: { position: [-5.88, 6.49, 6.48], target: [1.15, 2.3, 0.98], zoom: 402 },
+  illustrations: { position: [-4.13, 6.37, 7.48], target: [0.86, 1.99, 0.19], zoom: 402 },
+  projects: { position: [0.18, 10.17, 6.38], target: [0.49, 2.1, 0.71], zoom: 402 },
 };
 
 function CameraDebugger({ active }: { active: SectionId }) {
@@ -641,20 +641,20 @@ function PixelDeskScene({
           <>
             <Desk />
             <TutorialNotebook
-              active={active === "tutorials"}
-              onSelect={() => onSelect("tutorials")}
+              active={active === "projects"}
+              onSelect={() => onSelect("projects")}
             />
             <ComicRow
-              active={active === "comics"}
-              onSelect={() => onSelect("comics")}
+              active={active === "tech"}
+              onSelect={() => onSelect("tech")}
             />
             <WorkFrame
-              active={active === "works"}
-              onSelect={() => onSelect("works")}
+              active={active === "wallpapers"}
+              onSelect={() => onSelect("wallpapers")}
             />
             <PencilCup
-              active={active === "tools"}
-              onSelect={() => onSelect("tools")}
+              active={active === "illustrations"}
+              onSelect={() => onSelect("illustrations")}
             />
           </>
         )}
@@ -679,9 +679,8 @@ function PixelDeskScene({
 
 export default function Home() {
   const [activeId, setActiveId] = useState<SectionId>("home");
-  const [armedSectionId, setArmedSectionId] = useState<SectionId | null>(null);
   const [reducedMotion, setReducedMotion] = useState(false);
-  const [theme, setTheme] = useState<ThemeMode>("day");
+  const { theme, toggleTheme, noTransition } = useTheme();
   const active = sections.find((section) => section.id === activeId) ?? sections[0];
 
   useEffect(() => {
@@ -693,75 +692,25 @@ export default function Home() {
   }, []);
 
   useEffect(() => {
-    const savedTheme = window.localStorage.getItem("creative-desk-theme");
-    if (savedTheme === "day" || savedTheme === "night") setTheme(savedTheme);
-  }, []);
-
-  useEffect(() => {
     const requestedSection = new URLSearchParams(window.location.search).get("section") as SectionId | null;
     if (requestedSection && sections.some((section) => section.id === requestedSection)) {
       setActiveId(requestedSection);
     }
   }, []);
 
-  const toggleTheme = () => {
-    setTheme((current) => {
-      const next = current === "day" ? "night" : "day";
-      window.localStorage.setItem("creative-desk-theme", next);
-      return next;
-    });
-  };
-
   const focusSection = (sectionId: SectionId) => {
     setActiveId(sectionId);
-    setArmedSectionId(null);
-  };
-
-  const handleMenuSelect = (sectionId: SectionId) => {
-    if (sectionId === "home") {
-      focusSection("home");
-      return;
-    }
-
-    if (armedSectionId === sectionId) {
-      window.location.href = sectionRoutes[sectionId];
-      return;
-    }
-
-    setActiveId(sectionId);
-    setArmedSectionId(sectionId);
   };
 
   return (
-    <main className="cat-site" data-theme={theme} style={{ "--accent": active.accent } as React.CSSProperties}>
+    <main className={`cat-site${noTransition ? " no-transition" : ""}`} data-theme={theme} style={{ "--accent": active.accent } as React.CSSProperties} suppressHydrationWarning>
       <SceneHeader
         variant="home"
         subtitle="PIXEL CREATIVE DESK"
         theme={theme}
         onToggleTheme={toggleTheme}
         onBrandActivate={() => focusSection("home")}
-        navigation={
-          <nav className="shared-home-section-nav" aria-label="选择探索栏目">
-            {sections.map((section) => {
-              const armed = section.id !== "home" && section.id === armedSectionId;
-
-              return (
-                <button
-                  type="button"
-                  key={section.id}
-                  className={section.id === activeId ? "is-active" : ""}
-                  aria-pressed={section.id === activeId}
-                  aria-label={section.id === "home" ? "首页，回到桌面全景" : `${section.label}${armed ? "，再次点击进入页面" : "，点击聚焦"}`}
-                  onClick={() => handleMenuSelect(section.id)}
-                >
-                  <span className="shared-home-menu-index">{section.index}</span>
-                  <span className="shared-home-menu-label">{section.label}</span>
-                  {armed && <span className="shared-home-menu-arrow" aria-hidden="true">↗</span>}
-                </button>
-              );
-            })}
-          </nav>
-        }
+        activeHref="/"
       />
 
       <section className="cat-hero" aria-label="可探索的像素三维书桌">
@@ -788,7 +737,7 @@ export default function Home() {
         </aside>
       </section>
 
-      <footer className="cat-footer" id="contact"><span>© 2026 奇想书桌</span><span>把复杂的事，放进简单的桌面。</span></footer>
+      <footer className="cat-footer" id="contact"><span>© 2026 PL-HOME</span><span>This is all about me.</span></footer>
     </main>
   );
 }

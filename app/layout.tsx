@@ -7,8 +7,8 @@ const socialImageUrl = new URL("og-v2.png", `${siteUrl.replace(/\/$/, "")}/`).to
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
-  title: "PL-HOME｜作品、漫画、工具与教程",
-  description: "通过一张极简像素 3D 书桌，探索作品、漫画、工具、教程与创作者档案。",
+  title: "PL-HOME｜AIGC、项目、手绘与技术栈",
+  description: "通过一张极简像素 3D 书桌，探索 AIGC 创作、开发项目、手绘作品、技术栈与创作者档案。",
   icons: {
     icon: `${basePath}/brand/logo.png`,
     apple: `${basePath}/brand/logo.png`,
@@ -16,7 +16,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "PL-HOME",
     description: "一张可以用镜头探索的像素创作书桌。",
-    images: [{ url: socialImageUrl, width: 1200, height: 630, alt: "奇想书桌的极简体素 3D 场景" }],
+    images: [{ url: socialImageUrl, width: 1200, height: 630, alt: "PL-HOME的极简体素 3D 场景" }],
   },
   twitter: {
     card: "summary_large_image",
@@ -32,7 +32,14 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="zh-CN">
+    <html lang="zh-CN" suppressHydrationWarning>
+      <head>
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `try{var t=localStorage.getItem("creative-desk-theme");if(t==="day"||t==="night")document.documentElement.dataset.theme=t}catch(e){}`,
+          }}
+        />
+      </head>
       <body>{children}</body>
     </html>
   );

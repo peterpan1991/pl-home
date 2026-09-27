@@ -17,9 +17,9 @@ import {
 import { Suspense, useCallback, useEffect, useRef, useState, type ComponentRef } from "react";
 import { SceneHeader } from "../components/SiteHeaders";
 import { sitePath } from "../lib/sitePath";
+import { useTheme, type ThemeMode } from "../lib/useTheme";
 
 type AboutSectionId = "overview" | "interests" | "skills" | "projects";
-type ThemeMode = "day" | "night";
 type DebugMode = "off" | "camera" | "cat";
 type TransformMode = "translate" | "rotate" | "scale";
 type VectorTuple = [number, number, number];
@@ -52,36 +52,36 @@ const aboutSections: AboutSection[] = [
   {
     id: "overview",
     index: "00",
-    label: "关于我",
+    label: "About me",
     eyebrow: "A SMALL INTRODUCTION",
-    title: "不懂设计的前端不是好后端",
+    title: "关于我",
     description: "10+ 年 Web 全栈开发经验，从企业系统、电商平台到支付网关，长期参与产品从 0 到 1 的设计、开发与落地。\n画过UI、做过前端、写过后端、折腾过服务器。\n现在主要探索 Python、AI 应用与独立产品开发。",
     focus: "角色全身",
   },
   {
     id: "interests",
     index: "01",
-    label: "兴趣爱好",
+    label: "Interests",
     eyebrow: "THINGS I ENJOY",
-    title: "什么都爱一点",
+    title: "兴趣爱好",
     description: "关注 AI 应用、漫画与叙事、插画与视觉表达，也享受拆解需求、优化工作流和制作小工具的过程。",
     focus: "猫咪头部",
   },
   {
     id: "skills",
     index: "02",
-    label: "技能树",
+    label: "Skills",
     eyebrow: "WHAT IS IN THE BAG",
-    title: "web全栈+AI",
+    title: "技能池",
     description: "从前端到后端，从传统开发到vibe coding，从web到AI，能够独立完成需求拆解、架构设计、开发联调、测试部署和持续维护。技能跟着需求走。",
     focus: "旅行背包",
   },
   {
     id: "projects",
     index: "03",
-    label: "做过的项目",
+    label: "Projects",
     eyebrow: "SELECTED PROJECTS",
-    title: "做过这些",
+    title: "做过的项目",
     description: "官网、企业系统、电商、支付网关、公众号、小程序、桌面应用、小游戏等等。",
     focus: "角色胸前",
   },
@@ -478,7 +478,7 @@ useGLTF.preload(MODEL_PATH, false, true);
 
 export default function AboutPage() {
   const [activeId, setActiveId] = useState<AboutSectionId>("overview");
-  const [theme, setTheme] = useState<ThemeMode>("day");
+  const { theme, toggleTheme, noTransition } = useTheme();
   const [reducedMotion, setReducedMotion] = useState(false);
   const [debugAvailable, setDebugAvailable] = useState(false);
   const [debugMode, setDebugMode] = useState<DebugMode>("off");
@@ -499,8 +499,6 @@ export default function AboutPage() {
 
   useEffect(() => {
     setDebugAvailable(["localhost", "127.0.0.1"].includes(window.location.hostname));
-    const savedTheme = window.localStorage.getItem("creative-desk-theme");
-    if (savedTheme === "day" || savedTheme === "night") setTheme(savedTheme);
 
     const media = window.matchMedia("(prefers-reduced-motion: reduce)");
     const updateMotion = () => setReducedMotion(media.matches);
@@ -608,14 +606,6 @@ export default function AboutPage() {
     };
   }, [debugMode, moveToAdjacentSection, reducedMotion]);
 
-  const toggleTheme = () => {
-    setTheme((current) => {
-      const next = current === "day" ? "night" : "day";
-      window.localStorage.setItem("creative-desk-theme", next);
-      return next;
-    });
-  };
-
   const copyDebugValues = async () => {
     const tuple = (values: VectorTuple) => `[${values.join(", ")}]`;
     const text = debugMode === "cat"
@@ -632,7 +622,7 @@ export default function AboutPage() {
   };
 
   return (
-    <main className="about-page" data-theme={theme}>
+    <main className={`about-page${noTransition ? " no-transition" : ""}`} data-theme={theme} suppressHydrationWarning>
       <div className={`about-model-stage${debugMode !== "off" ? " is-debugging" : ""}`} role="img" aria-label={`阿橘三维角色，当前镜头聚焦${active.focus}`}>
         <AboutScene
           active={activeId}
